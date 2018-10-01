@@ -1,19 +1,19 @@
 var config = {
     testnet: false, // this is adjusted page.h if needed. dont need to change manually
     stagenet: false, // this is adjusted page.h if needed. dont need to change manually
-    coinUnitPlaces: 6,
+    coinUnitPlaces: 8,
     txMinConfirms: 10,         // corresponds to CRYPTONOTE_DEFAULT_TX_SPENDABLE_AGE in FURY
-    txCoinbaseMinConfirms: 60, // corresponds to CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW in FURY
+    txCoinbaseMinConfirms: 10, // corresponds to CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW in FURY
     coinSymbol: 'XCA',
     openAliasPrefix: "furyd",
     coinName: 'FURY',
     coinUriPrefix: 'FURY:',
-    addressPrefix: 0x5c134,
-    integratedAddressPrefix: 0x3fc134,
-    subAddressPrefix: 42,
-    addressPrefixTestnet: 0x5c134,
-    integratedAddressPrefixTestnet: 0x3fc134,
-    subAddressPrefixTestnet: 42,
+    addressPrefix: 0x361168,
+    integratedAddressPrefix: 0x157e1476,
+    subAddressPrefix: 0x719a,
+    addressPrefixTestnet: 53,
+    integratedAddressPrefixTestnet: 54,
+    subAddressPrefixTestnet: 63,
     addressPrefixStagenet: 24,
     integratedAddressPrefixStagenet: 25,
     subAddressPrefixStagenet: 36,

@@ -5,10 +5,6 @@
 Mainnet versions:
  - [https://explorer.fury.org](https://explorer.fury.org) - The official FURY Mainnet explorer, run by the FURY team
 
-Testnet version:
- - [testexplorer.fury.org](http://testexplorer.fury.org) - The official FURY Testnet explorer, run by the FURY team
-
-
 
 ## Compilation on Ubuntu 16.04/18.04
 
@@ -25,12 +21,9 @@ sudo apt install git build-essential cmake libboost-all-dev miniupnpc libunbound
 # go to home folder
 cd ~
 
-git clone --recursive https://github.com/FURY-project/FURY
+git clone --recursive https://github.com/FuryCoin/Fury
 
-cd FURY/
-
-# checkout last FURY version
-git checkout -b last_release v0.12.1.0
+cd Fury/
 
 make
 ```
@@ -45,10 +38,10 @@ as follows:
 cd ~
 
 # download the source code
-git clone https://github.com/FURY-official/onion-monero-blockchain-explorer.git
+git clone https://github.com/FuryCoin/onion-monero-blockchain-explorer.git
 
 # enter the downloaded sourced code folder
-cd onion-FURY-blockchain-explorer
+cd onion-monero-blockchain-explorer
 
 # make a build folder and enter it
 mkdir build && cd build
