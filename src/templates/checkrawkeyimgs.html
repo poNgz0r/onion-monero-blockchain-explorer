@@ -1,9 +1,9 @@
 
 <div>
 
-    <div class="center">
-        <br/>
-        <h3 class="center">Signed Key Images Checker</h3>
+    <div class="table-responsive">
+        
+        <h3>Signed Key Images Checker</h3>
     </div>
 
 
@@ -17,10 +17,10 @@
         <h4>Key images for address: {{address}}</h4>
         <h4>Viewkey: {{viewkey}}</h4>
 
-        <div class="center">
+        <div class="table-responsive">
 
-            <form action="/genrawkeyimgs" method="post" style="width:100%; margin-top:15px" class="style-1">
-                <table class="center" style="width:80%">
+            <form action="/genrawkeyimgs" method="post">
+                <table class="table table-hover table-striped">
                     <tr>
                         <td>Key no.</td>
                         <td>Key image</td>
@@ -42,7 +42,7 @@
                         </tr>
                     {{/key_imgs}}
                 </table>
-                <br/>
+                
             </form>
 
         </div>

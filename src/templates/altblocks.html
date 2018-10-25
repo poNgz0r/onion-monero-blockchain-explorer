@@ -1,25 +1,24 @@
-<h2 style="margin-bottom: 0px">
+<h2>
    Alternative blocks
 </h2>
-<h4 style="font-size: 14px; margin-top: 0px">(no of alt blocks: {{no_alt_blocks}})</h4>
-<div class="center">
-    
-      <table class="center" style="width:80%">
-            <tr>
-                <td>height</td>
-                <td>age</td>
-                <td>hash</td>
-                <td>txs no</td>
-            </tr>
-            {{#blocks}}
-            <tr>
-                <td>{{height}}</td>
-                <td>{{age}}</td>
-                <td>{{hash}}</td>
-                <td>{{no_of_txs}}</td>
-            </tr>
-            {{/blocks}}
-        </table>
-
-
+<h4>(no of alt blocks: {{no_alt_blocks}})</h4>
+<div class="table-responsive">    
+	<table class="table table-hover table-striped">
+		<thead>
+			<tr>
+				<th>height</th>
+				<th>age</th>
+				<th>hash</th>
+				<th>txs no</th>
+			</tr>
+		</thead>			
+		{{#blocks}}
+		<tr>
+			<td>{{height}}</td>
+			<td>{{age}}</td>
+			<td>{{hash}}</td>
+			<td>{{no_of_txs}}</td>
+		</tr>
+		{{/blocks}}
+	</table>
 </div>
