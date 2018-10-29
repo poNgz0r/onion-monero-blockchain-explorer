@@ -24,18 +24,21 @@
 	{{^enable_js}}{{/enable_js}}
 	<script>
 	$(function(){
-		$('.mdl-switch').on('click', function(){
-			if($(this).hasClass('is-checked')){
+		$('.theme').on('click', function(){
+			if($(this).hasClass('clicked')){
+				$(this).removeClass('clicked');
 				$('body').removeClass('dark-theme');
 				localStorage.setItem('theme', 'light');
 			}else{
+				$(this).addClass('clicked');
 				$('body').addClass('dark-theme');
 				localStorage.setItem('theme', 'dark');
 			}			
 		});
 		
 		if(localStorage.getItem('theme') == 'dark'){
-			$('.mdl-switch__input').trigger('click');
+			$('.theme').addClass('clicked');
+			$('body').addClass('dark-theme');
 		}
 	});
 	</script>
@@ -47,10 +50,8 @@
 				<li class="logo"><a href="/" target="_self"><img alt="logo-FURY" src="https://fury-coin.com/images/logo.png"></a></li>
 				<li>Explorer</li>
 				<li class="theme">
-					<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
-						<input type="checkbox" id="switch-2" class="mdl-switch__input">
-						<span class="mdl-switch__label">Dark Theme</span>
-					</label>				
+					<span class="dark">Dark Theme</span>				
+					<span class="light">Light Theme</span>				
 				</li>
 			</ul>					
 		</div>
