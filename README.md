@@ -3,7 +3,7 @@
 ## Explorer hosts
 
 Mainnet versions:
- - [https://explorer.fury.org](https://explorer.fury.org) - The official FURY Mainnet explorer, run by the FURY team
+ - [https://fury-block-explorer.thepiratemine.nl](https://fury-block-explorer.thepiratemine.nl) - The official FURY Mainnet explorer, run by thepiratemine.nl on behave of the Fury team.
 
 
 ## Compilation on Ubuntu 16.04/18.04
