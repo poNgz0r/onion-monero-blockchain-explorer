@@ -4,7 +4,7 @@
 			<h3>
 			Network
 			| 
-			Server time: {{server_timestamp}}  | <a href="/txpool">TX pool</a>
+			Server time: {{server_timestamp}}
 			 {{#enable_pusher}}
 				| <a href="/rawtx">Transaction pusher </a>
 			 {{/enable_pusher}}
@@ -91,9 +91,7 @@
 		{{/is_page_zero}}
 		{{^is_page_zero}}
 		  <h2>Transactions in older blocks<!--(height: {{height}})--></h2>
-		{{/is_page_zero}}
-
-		<h4>(Median size of 100 blocks: {{blk_size_median}} kB)</h4>
+		{{/is_page_zero}}		
 
 		<div class="table-responsive">
 			<table class="table table-hover table-striped">
@@ -123,6 +121,12 @@
 					<td class="text-right">{{tx_size_short}}</td>
 				</tr>
 				{{/txs}}
+				<tfoot>
+					<tr>
+						<th colspan="8" class="text-right">Average size of 100 blocks</th>
+						<th class="text-right">{{blk_size_median}}</th>
+					</tr>
+				</tfoot>
 			</table>
 			<div id="pages" style="text-align: center;">
 			 {{^is_page_zero}}

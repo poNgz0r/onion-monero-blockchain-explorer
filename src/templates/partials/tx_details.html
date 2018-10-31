@@ -1,100 +1,99 @@
 <div class="card">		
-	<div class="col-sm-12">	
-		<h4>Tx hash: <span class="ellipsis">{{tx_hash}}</span></h4>
-		{{#enable_mixins_details}}
-		<h5>Tx prefix hash: <span class="ellipsis">{{tx_prefix_hash}}</span></h5>
-		{{/enable_mixins_details}}
-		<h5>Tx public key: <span class="ellipsis"><span id="tx_pub_key">{{tx_pub_key}}</span></span></h5>
+	<div class="col-sm-12">
+		<h3 class="orange">Tx hash: <span class="ellipsis">{{tx_hash}}</span></h3>
 		<span id="add_tx_pub_keys" style="display: none;"><span class="ellipsis">{{add_tx_pub_keys}}</span></span>
-
-		{{#has_payment_id}}
-			<h5>Payment id: <span class="ellipsis"><span id="payment_id">{{payment_id}}</span></span></h5>
-			<h5>Payment id as ascii: <span class="ellipsis">{{payment_id_as_ascii}}</span></span></h5>
-		{{/has_payment_id}}
-
-		{{#has_payment_id8}}
-			<h5>Payment id (encrypted): <span class="ellipsis"><span id="payment_id">{{payment_id8}}</span></span></h5>
-		{{/has_payment_id8}}
-
-
-		{{#have_prev_hash}}
-			<h5>Previous tx: <a href="/tx/{{prev_hash}}"><span class="ellipsis">{{prev_hash}}</span></a></h5>
-		{{/have_prev_hash}}
-
-		{{#have_next_hash}}
-			<h5>Next tx: <a href="/tx/{{next_hash}}"><span class="ellipsis">{{next_hash}}</span></a></h5>
-		{{/have_next_hash}}
-	</div>
-</div>
-
-<div class="card">		
-	<div class="col-sm-4">		
+		
 		<div class="table-responsive">		
 			<table class="table table-hover table-striped">
-				<thead>
-					<tr>
-						<th>Timestamp</th>
-						<th>Timestamp [UCT]</th>
-						<th>Delta Age [y:d:h:m:s]</th>
-					</tr>
-				</thead>
-				{{^have_raw_tx}}
-				<tbody>
-					<tr>
-						<td>{{blk_timestamp_uint}}</td>
-						<td>{{blk_timestamp}}</td>
-						<td>{{delta_time}}</td>
-					</tr>
-				</tbody>
-				{{/have_raw_tx}}
-			</table>
-		</div>
-	</div>
-	
-	<div class="col-sm-4">		
-		<div class="table-responsive">		
-			<table class="table table-hover table-striped">
-				<thead>
-					<tr>
-						<th>Block</th>
-						<th>Fee (per_kB)</th>
-						<th>Tx size</th>			
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{{blk_height}}</td>
-						<td>{{tx_fee}} ({{payed_for_kB}})</td>
-						<td>{{tx_size}} kB</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	
-	<div class="col-sm-4">	
-		<div class="table-responsive">	
-			<table class="table table-hover table-striped">
-				<thead>
-					<tr>
-						<th>Tx version</th>
-						<th>No of confirmations</th>
-						<th>RingCT/type</th>
-					</tr>
-				</thead>
 				<tbody>	
 					<tr>
-						<td>{{tx_version}}</td>
-						<td>{{confirmations}}</td>
-						<td>{{#is_ringct}}yes/{{rct_type}}{{/is_ringct}}{{^is_ringct}}no{{/is_ringct}}</td>
+						<td class="w150">Block</td>
+						<td>{{blk_height}}</td>
 					</tr>
-				</tbody>
+					{{#delta_time}}
+					<tr>
+						<td class="w150">Confirmations</td>
+						<td>{{confirmations}} <span class="btn btn-success confirmed">Confirmed</span></td>
+					</tr>		
+					{{/delta_time}}
+					{{^delta_time}}
+					<tr>
+						<td class="w150">Confirmations</td>
+						<td>{{confirmations}} <span class="btn btn-warning waiting">Waiting...</span></td>
+					</tr>
+					{{/delta_time}}
+					<tr>
+						<td class="w150">Timestamp [UCT]</td>
+						<td>{{blk_timestamp}}</td>
+					</tr>		
+					<tr>
+						<td class="w150">Fee [per kB]</td>
+						<td>{{tx_fee}}</td>
+					</tr>	
+					<tr>
+						<td class="w150">Tx size</td>
+						<td>{{tx_size}}</td>
+					</tr>
+				</tbody>	
 			</table>
-		</div>
-	</div>
-	<div class="col-sm-12 padding-md">		
-		Extra: <span class="ellipsis">{{extra}}</span>
+		</div>	
 	</div>	
+</div>
+
+<div class="card">	
+	<div class="col-sm-12">
+		<h3 class="orange"></h3>
+
+		<div class="table-responsive">		
+			<table class="table table-hover table-striped">
+				<tbody>	
+					<tr>
+						<td class="w150">Tx public key</td>
+						<td>{{tx_pub_key}}</span></td>
+					</tr>	
+					{{#enable_mixins_details}}
+					<tr>
+						<td class="w150">Tx prefix hash</td>
+						<td>{{tx_prefix_hash}}</span></td>
+					</tr>
+					{{/enable_mixins_details}}							
+					<tr>
+						<td class="w150">Tx version</td>
+						<td>{{tx_version}}</td>
+					</tr>			
+					<tr>
+						<td class="w150">RingCT/type</td>
+						<td>{{#is_ringct}}yes/{{rct_type}}{{/is_ringct}}{{^is_ringct}}no{{/is_ringct}}</td>
+					</tr>												
+					<tr>
+						<td class="w150">Delta [y:d:h:m:s]</td>
+						<td>{{delta_time}}</td>
+					</tr>
+					{{#has_payment_id}}
+					<tr>
+						<td class="w150">Payment id</td>
+						<td><span id="payment_id">{{payment_id}}</span></td>
+					</tr>
+					<tr>
+						<td class="w150">Payment id as ascii</td>
+						<td>{{payment_id_as_ascii}}</td>
+					</tr>
+					{{/has_payment_id}}	
+
+					{{#has_payment_id8}}
+					<tr>
+						<td class="w150">Payment id (encrypted)</td>
+						<td><span id="payment_id">{{payment_id8}}</span></td>
+					</tr>
+					{{/has_payment_id8}}	
+					<tr>
+						<td class="w150">Extra</td>
+						<td>{{extra}}</span></td>
+					</tr>
+				</tbody>	
+			</table>
+		</div>											
+	</div>
 </div>
 
 <div class="card">	
@@ -198,7 +197,7 @@
 {{#enable_js}}
 
 	<!-- to disply results from deconding and proving txs using js -->
-	<div id="decode-prove-results" style="margin-top:60px;border-style: dotted">
+	<div class="card" id="decode-prove-results">
 
 	</div>
 
@@ -416,7 +415,7 @@
 			}
 
 
-			$("#decode-prove-results").html(decoding_results_str);
+			$("#decode-prove-results").html("<div class='card'>" + decoding_results_str + "</div>");
 		}
 
 	</script>
@@ -454,119 +453,97 @@
 		{{/inputs_xmr_sum_not_zero}}
 
 		{{#show_part_of_inputs}}
-			<h5 style="margin-top: 2px">
+			<h5>
 			   Only {{max_no_of_inputs_to_show}} inputs are shown. To see all,
 				click "<a href="/tx/{{tx_hash}}/1">more details</a>"
 			</h5>
 		{{/show_part_of_inputs}}
-
+		
+		{{#inputs}}
 		<div class="table-responsive">
-		   <table class="table table-hover table-striped">
-		  {{#inputs}}
+		   <table class="table table-hover table-striped margin-none">		  
 			<tr>
-			  <td style="text-align: left;">
+			  <th>
 				  key image  {{input_idx}}: {{in_key_img}}
 				  {{#have_raw_tx}}
 				   Already spent:
 					{{#already_spent}}
-						<span style="color: red; font-weight: bold;">True</span>
+						<span style="font-weight: bold;">True</span>
 					{{/already_spent}}
 				  {{^already_spent}}
 					False
 				  {{/already_spent}}
 
 				  {{/have_raw_tx}}
-			  </td>
-			  <td>amount: {{amount}}</td>
+			  </th>
+			  <th class="text-align-right">amount: {{amount}}</td>
 		   </tr>
-			  <tr>
-				<td colspan="2">
-					{{#enable_mixins_details}}
-						<table style="width:100%; margin-bottom:20px">
-						<tr>
-						  <td>ring members</td>
-						  {{#have_raw_tx}}
-							<td>Is it real?</td>
-						  {{/have_raw_tx}}
-						  <td>blk</td>
-						  <td>ring size</td>
-						  <td>in/out</td>
-						  <td>timestamp</td>
-						  <td>age [y:d:h:m:s]</td>
-
-						</tr>
-					 {{#mixins}}
-						<tr>
-						  <td> - {{mix_idx}}: <a href="/tx/{{mix_tx_hash}}">{{mix_pub_key}}</a></td>
-						  {{#have_raw_tx}}
-							{{#mix_is_it_real}}
-								<td><span style="color: #008009;font-weight: bold">{{mix_is_it_real}}</span></td>
-							{{/mix_is_it_real}}
-							{{^mix_is_it_real}}
-								<td>{{mix_is_it_real}}</td>
-							{{/mix_is_it_real}}
-						  {{/have_raw_tx}}
-						  <td>{{mix_blk}}</td>
-						  <td>{{mix_mixin_no}}</td>
-						  <td>{{mix_inputs_no}}/{{mix_outputs_no}}</td>
-						  <td>{{mix_timestamp}}</td>
-						  <td>{{mix_age}}</td>
-						</tr>
-					 {{/mixins}}
-					 </table>
-					{{/enable_mixins_details}}
-					{{^enable_mixins_details}}
-					<table style="width:100%; margin-bottom:20px">
-						<tr>
-							<td>ring members</td>
-							{{#have_raw_tx}}
-								<td>Is it real?</td>
-							{{/have_raw_tx}}
-							<td>blk</td>
-						</tr>
-						{{#mixins}}
-						<tr>
-							<td> - {{mix_idx}}: {{mix_pub_key}}</td>
-							{{#have_raw_tx}}
-								{{#mix_is_it_real}}
-									<td><span style="color: #008009;font-weight: bold">{{mix_is_it_real}}</span></td>
-								{{/mix_is_it_real}}
-								{{^mix_is_it_real}}
-									<td>{{mix_is_it_real}}</td>
-								{{/mix_is_it_real}}
-							{{/have_raw_tx}}
-							<td>{{mix_blk}}</td>
-						</tr>
-						{{/mixins}}
-					</table>
-					{{/enable_mixins_details}}
-			   </td>
-			 </tr>
-
-		<!--
-			{{#with_ring_signatures}}
-
-			  <tr>
-				<td colspan="2">
-					<table style="width:100%; margin-bottom:20px">
-					<tr>
-					  <td>Ring signature</td>
-					</tr>
-					{{#ring_sigs}}
-					<tr>
-						<td>{{ring_sig}}</td>
-					</tr>
-					{{/ring_sigs}}
-				 </table>
-			   </td>
-			 </tr>
-
-			{{/with_ring_signatures}}
-		-->
-
-		  {{/inputs}}
 		  </table>
+
+			{{#enable_mixins_details}}
+				<table class="table inner-table table-hover table-striped">
+					<thead>
+						<tr>
+							<th>ring members</th>
+							{{#have_raw_tx}}
+							<th class="text-align-right">Is it real?</th>
+							{{/have_raw_tx}}
+							<th class="text-align-right">blk</th>
+							<th class="text-align-right">ring size</th>
+							<th class="text-align-right">in/out</th>
+							<th class="text-align-right">timestamp</th>
+							<th class="text-align-right">age [y:d:h:m:s]</th>
+						</tr>
+					</thead>
+				 {{#mixins}}
+					<tr>
+					  <td> - {{mix_idx}}: <a href="/tx/{{mix_tx_hash}}">{{mix_pub_key}}</a></td>
+					  {{#have_raw_tx}}
+						{{#mix_is_it_real}}
+							<td class="text-align-right"><span style="font-weight: bold">{{mix_is_it_real}}</span></td>
+						{{/mix_is_it_real}}
+						{{^mix_is_it_real}}
+							<td class="text-align-right">{{mix_is_it_real}}</td>
+						{{/mix_is_it_real}}
+					  {{/have_raw_tx}}
+					  <td class="text-align-right">{{mix_blk}}</td>
+					  <td class="text-align-right">{{mix_mixin_no}}</td>
+					  <td class="text-align-right">{{mix_inputs_no}}/{{mix_outputs_no}}</td>
+					  <td class="text-align-right">{{mix_timestamp}}</td>
+					  <td class="text-align-right">{{mix_age}}</td>
+					</tr>
+				 {{/mixins}}
+				 </table>
+			{{/enable_mixins_details}}
+			{{^enable_mixins_details}}
+			<table class="table inner-table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>ring members</th>
+						{{#have_raw_tx}}
+						<th class="text-align-right">Is it real?</th>
+						{{/have_raw_tx}}
+						<th class="text-align-right">blk</th>
+					</tr>
+				</thead>
+				{{#mixins}}
+				<tr>
+					<td> - {{mix_idx}}: {{mix_pub_key}}</td>
+					{{#have_raw_tx}}
+						{{#mix_is_it_real}}
+							<td class="text-align-right"><span style="font-weight: bold">{{mix_is_it_real}}</span></td>
+						{{/mix_is_it_real}}
+						{{^mix_is_it_real}}
+							<td class="text-align-right">{{mix_is_it_real}}</td>
+						{{/mix_is_it_real}}
+					{{/have_raw_tx}}
+					<td class="text-align-right">{{mix_blk}}</td>
+				</tr>
+				{{/mixins}}
+			</table>
+			{{/enable_mixins_details}}
 		</div>
+		{{/inputs}}
 	</div>
 </div>
 

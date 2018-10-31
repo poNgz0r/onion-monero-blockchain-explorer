@@ -1,139 +1,138 @@
-	<div class="card">
-		<div class="col-sm-12">    
-			<h4>Block hash (height): <span class="ellipsis">{{blk_hash}} ({{blk_height}})</span></h4>
-
+<div class="card">		
+	<div class="col-sm-12">
+		<h3 class="orange">
+			Block {{blk_height}}	
+		</h3>			
+		<div class="navigation">
 			{{#have_prev_hash}}
-			<h5>Previous block: <a href="/block/{{prev_hash}}"><span class="ellipsis">{{prev_hash}}</span></a></h5>
-			{{/have_prev_hash}}
-
+				<a title="Previous block" href="/block/{{prev_hash}}"><span class="fa fa-arrow-left"></span></a>
+			{{/have_prev_hash}}			
 			{{#have_next_hash}}
-			<h5>Next block: <a href="/block/{{next_hash}}"><span class="ellipsis">{{next_hash}}</span></a></h5>
-			{{/have_next_hash}}
+				<a title="Next block" href="/block/{{next_hash}}"><span class="fa fa-arrow-right"></span></a>
+			{{/have_next_hash}}			
 		</div>
-	</div>
+		<div class="table-responsive">		
+			<table class="table table-hover table-striped">
+				<tbody>	
+					<tr>
+						<td class="w150">Block</td>
+						<td>{{blk_height}}</td>
+					</tr>
+					<tr>
+						<td class="w150">Block hash</td>
+						<td>{{blk_hash}}</td>
+					</tr>		
+					<tr>
+						<td class="w150">Block reward</td>
+						<td>{{blk_reward}}</td>
+					</tr>		
+					<tr>
+						<td class="w150">Block size</td>
+						<td>{{blk_size}}</td>
+					</tr>	
+					<tr>
+						<td class="w150">Total fees</td>
+						<td>{{sum_fees}}</td>
+					</tr>							
+					<tr>
+						<td class="w150">Timestamp [UCT]: </td>
+						<td>{{blk_timestamp}}</td>
+					</tr>						
+				</tbody>	
+			</table>
+		</div>	
+	</div>	
+</div>
 
-
-	<div class="card">
-		<div class="col-sm-4">
-			<div class="table-responsive">	
-				<table class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<th>Timestamp [UCT] (epoch)</th>
-							<th class="text-align-right">Age {{age_format}}</th>
-							<th class="text-align-right">Delta [h:m:s]</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{blk_timestamp}} ({{blk_timestamp_epoch}})</td>
-							<td class="text-align-right">{{blk_age}}</td>
-							<td class="text-align-right">{{delta_time}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
+<div class="card">	
+	<div class="col-sm-12">
+		<h3 class="orange">Extra</h3>
 		
-		<div class="col-sm-4">
-			<div class="table-responsive">	
-				<table class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<th>Major.minor version</th>
-							<th class="text-align-right">Block reward</th>
-							<th class="text-align-right">Block size [kB]</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{major_ver}}.{{minor_ver}}</td>
-							<td class="text-align-right">{{blk_reward}}</td>
-							<td class="text-align-right">{{blk_size}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		
-		<div class="col-sm-4">
-			<div class="table-responsive">	
-				<table class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<th>nonce</th>
-							<th class="text-align-right">Total fees</th>
-							<th class="text-align-right">No of txs</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{blk_nonce}}</td>
-							<td class="text-align-right">{{sum_fees}}</td>
-							<td class="text-align-right">{{no_txs}}</td>
-						</tr>
-					</tbody>	
-				</table>
-			</div>
-		</div>
+		<div class="table-responsive">		
+			<table class="table table-hover table-striped">
+				<tbody>	
+					<tr>
+						<td class="w150">Age {{age_format}}</td>
+						<td>{{blk_age}}</td>
+					</tr>		
+					<tr>
+						<td class="w150">Delta [y:d:h:m:s]</td>
+						<td>{{delta_time}}</td>
+					</tr>	
+					<tr>
+						<td class="w150">Version</td>
+						<td>{{major_ver}}.{{minor_ver}}</td>
+					</tr>		
+					<tr>
+						<td class="w150">Nonce</td>
+						<td>{{blk_nonce}}</td>
+					</tr>		
+					<tr>
+						<td class="w150">No. of txs</td>
+						<td>{{no_txs}}</td>
+					</tr>						
+				</tbody>	
+			</table>
+		</div>			
 	</div>
-	
-	<div class="card">
-		<div class="col-sm-12">
-			<h3>Miner reward transaction</h3>
-			<div class="table-responsive">	
-				<table class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<th>hash</th>
-							<th class="w150 text-align-right">outputs</th>
-							<th class="w125 text-align-right">size [kB]</th>
-							<th class="w75 text-align-right">version</th>
-						</tr>
-					</thead>
-					{{#coinbase_txs}}
-						<tr>
-							<td><a href="/tx/{{hash}}">{{hash}}</a>
-							<td class="text-align-right">{{sum_outputs}}</td>
-							<td class="text-align-right">{{tx_size}}</td>
-							<td class="text-align-right">{{version}}</td>
-						</tr>
-					{{/coinbase_txs}}
-				</table>
-			</div>
-		</div>
-    </div>
+</div>
 
-	{{#have_txs}}
-	<div class="card">
-		<div class="col-sm-12">
-			<h3>Transactions ({{no_txs}})</h3>
-			<div class="table-responsive">				
-				<table class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<th>hash</th>
-							<th class="w150 text-align-right">outputs</th>
-							<th class="w150 text-align-right">fee</th>
-							<th class="w125 text-align-right">ring size</th>
-							<th class="w125 text-align-right">in/out</th>
-							<th class="w125 text-align-right">size [kB]</th>
-							<th class="w75 text-align-right">version</th>
-						</tr>
-					</thead>
-					{{#blk_txs}}
-						<tr>
-							<td><a href="/tx/{{hash}}">{{hash}}</a></td>
-							<td class="text-align-right">{{sum_outputs}}</td>
-							<td class="text-align-right">{{tx_fee}}</td>
-							<td class="text-align-right">{{mixin}}</td>
-							<td class="text-align-right">{{no_inputs}}/{{no_outputs}}</td>                    
-							<td class="text-align-right">{{tx_size}}</td>
-							<td class="text-align-right">{{version}}</td>
-						</tr>
-					{{/blk_txs}}
-				</table>
-			</div>
+<div class="card">
+	<div class="col-sm-12">
+		<h3>Miner reward transaction</h3>
+		<div class="table-responsive">	
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>hash</th>
+						<th class="w150 text-align-right">outputs</th>
+						<th class="w125 text-align-right">size [kB]</th>
+						<th class="w75 text-align-right">version</th>
+					</tr>
+				</thead>
+				{{#coinbase_txs}}
+					<tr>
+						<td><a href="/tx/{{hash}}">{{hash}}</a>
+						<td class="text-align-right">{{sum_outputs}}</td>
+						<td class="text-align-right">{{tx_size}}</td>
+						<td class="text-align-right">{{version}}</td>
+					</tr>
+				{{/coinbase_txs}}
+			</table>
 		</div>
 	</div>
-	{{/have_txs}}
+</div>
+
+{{#have_txs}}
+<div class="card">
+	<div class="col-sm-12">
+		<h3>Transactions ({{no_txs}})</h3>
+		<div class="table-responsive">				
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>hash</th>
+						<th class="w150 text-align-right">outputs</th>
+						<th class="w150 text-align-right">fee</th>
+						<th class="w125 text-align-right">ring size</th>
+						<th class="w125 text-align-right">in/out</th>
+						<th class="w125 text-align-right">size [kB]</th>
+						<th class="w75 text-align-right">version</th>
+					</tr>
+				</thead>
+				{{#blk_txs}}
+					<tr>
+						<td><a href="/tx/{{hash}}">{{hash}}</a></td>
+						<td class="text-align-right">{{sum_outputs}}</td>
+						<td class="text-align-right">{{tx_fee}}</td>
+						<td class="text-align-right">{{mixin}}</td>
+						<td class="text-align-right">{{no_inputs}}/{{no_outputs}}</td>                    
+						<td class="text-align-right">{{tx_size}}</td>
+						<td class="text-align-right">{{version}}</td>
+					</tr>
+				{{/blk_txs}}
+			</table>
+		</div>
+	</div>
+</div>
+{{/have_txs}}

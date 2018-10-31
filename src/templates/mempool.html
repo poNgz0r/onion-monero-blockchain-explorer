@@ -1,33 +1,29 @@
 <div class="card">
 	<div class="col-sm-12">
-		<h2>TX pool</h2>
-		<h4>(no of txs: {{mempool_size}}, size: {{mempool_size_kB}} kB, updated every {{ mempool_refresh_time }} seconds)</h4>
+		<h2>Tx pool ({{mempool_size}})</h2>
 		<div class="table-responsive">    
 			<table class="table table-hover table-striped">
 				<thead>
 					<tr>
-						<th class="w125 text-right">age [h:m:s]</th>
+						<th class="w125">age [h:m:s]</th>
 						<th>transaction hash</th>
 						<th class="w125 text-right">fee/per_kB</th>
-						<!--<td>outputs</td>-->
 						<th class="w125 text-right">in/out/pID</th>
 						<th class="w125 text-right">ring size</th>
-						<t class="w125 text-right"h>tx size [kB]</th>
+						<th class="w125 text-right">tx size [kB]</th>
 					</tr>
 				</thead>
 				{{#mempooltxs}}
 				<tr>
-					<td class="text-right">{{age}}</td>
+					<td>{{age}}</td>
 					<td><a href="/tx/{{hash}}">{{hash}}</a></td>
 					<td class="text-right">{{fee}}/{{payed_for_kB}}</td>
-					<!--<td>{{xmr_outputs}}</td>-->
 					<td class="text-right">{{no_inputs}}/{{no_outputs}}/{{pID}}</td>
 					<td class="text-right">{{mixin}}</td>
 					<td class="text-right">{{txsize}}</td>
 				</tr>
 				{{/mempooltxs}}
 			</table>
-
 			{{^mempool_fits_on_front_page}}
 			{{#partial_mempool_shown}}
 			<div>
@@ -37,5 +33,6 @@
 
 			{{/mempool_fits_on_front_page}}
 		</div>
+		<!-- <h5>Total transactions: {{mempool_size}}, size: {{mempool_size_kB}} kB, updated every {{ mempool_refresh_time }} seconds</h5> -->
 	</div>
 </div>

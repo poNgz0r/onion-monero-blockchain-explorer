@@ -6,7 +6,7 @@ body {
   padding: 0px;
   margin-bottom: 85px;
   font-size: 16px;
-  background-image: url(https://fury.thepiratemine.nl/themes/img/bg-light.png);
+  background-color: #eaeaea;
 }
 body.dark-theme {
   color: #cacaca;
@@ -49,7 +49,35 @@ body.dark-theme .table > tfoot > tr > th,
 body.dark-theme .table > thead > tr > td,
 body.dark-theme .table > tbody > tr > td,
 body.dark-theme .table > tfoot > tr > td {
-  border-top: 1px solid #999;
+  border-top: 1px solid #000;
+}
+
+body.dark-theme .navigation a span{
+	background: #666;
+	border: 1px solid #000;		
+}
+
+body.dark-theme .table>thead>tr>th{
+	border-bottom: 2px solid #000;
+}
+
+.navigation{
+	position: absolute;
+	top: 15px;
+	right: 15px;	
+}
+	
+.navigation a{
+	position: relative;
+	margin-left: 5px;
+	display: inline-block;
+}
+
+.navigation a span{
+	display: block;
+    background: #f9f9f9;
+    border: 1px solid #ddd;		
+	padding: 5px;
 }
 
 h1, h2 {
@@ -85,25 +113,70 @@ h6, .h6 {
   width: 75px;
 }
 
+.mw75{
+	max-width: 75px;
+}
+
 .w100 {
   width: 100px;
+}
+
+.mw100{
+	max-width: 100px;
 }
 
 .w125 {
   width: 125px;
 }
 
+.mw125{
+	max-width: 125px;
+}
+
 .w150 {
   width: 150px;
+}
+
+.mw150{
+	max-width: 150px;
 }
 
 .w200 {
   width: 200px;
 }
 
+.mw200{
+	max-width: 200px;
+}
+
+.w250 {
+  width: 250px;
+}
+
+.mw250{
+	max-width: 250px;
+}
+
+.w300 {
+  width: 300px;
+}
+
+.mw300{
+	max-width: 300px;
+}
+
+.text-align-center{
+	text-align: center;
+}
+
 .text-align-right {
   text-align: right;
 }
+
+.orange{
+	color: #ff6300;
+}
+
 
 #pages {
   margin-top: 15px;
@@ -132,6 +205,7 @@ a:active {
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .card {
@@ -145,6 +219,11 @@ a:active {
   border-radius: 3px;
   color: rgba(0, 0, 0, 0.87);
   background: #fff;
+}
+
+table.inner-table{
+	margin-left: 30px;
+	width: calc(100% - 30px);
 }
 
 @media (max-width: 768px) {
@@ -198,6 +277,10 @@ a:active {
 }
 
 /* Bootstrap Form Controls */
+.padding-none{
+  padding: 0px;
+}
+
 .padding-xs {
   padding: 5px;
 }
@@ -336,6 +419,10 @@ a:active {
 
 .padding-left-xl {
   padding-left: 25px;
+}
+
+.margin-none{
+  margin: 0px;
 }
 
 .margin-xs {
@@ -605,6 +692,8 @@ header ul > li.theme .light{
 	display: none;
 }
 
+header ul > li.theme .light:active,
+header ul > li.theme .light:focus,
 header ul > li.theme .light:hover{
 	color: #262626;
 	background: #fff;
@@ -615,6 +704,8 @@ header ul > li.theme .dark{
 	display: block;
 }
 
+header ul > li.theme .dark:active,
+header ul > li.theme .dark:focus,
 header ul > li.theme .dark:hover{
 	background: #ff6300;
 }
@@ -667,4 +758,13 @@ footer {
   margin-bottom: 20px;
   font-size: 12px;
   text-align: center;
+}
+
+.waiting,
+.confirmed{
+	position: relative;
+	margin-left: 5px;
+	font-size: 12px;
+	padding: 2px 4px 0px;
+	border-radius: 4px;
 }
