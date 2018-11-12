@@ -29,13 +29,13 @@ body.dark-theme header ul > li.theme .dark {
 
 body.dark-theme .card {
     color: #cacaca;
-    background: #4a4a4a;
+    background: #2a2a2a;
 }
 
 body.dark-theme .form-control,
 body.dark-theme .form-select {
     color: #cacaca;
-    background: #666;
+    background: #323232;
 }
 
 body.dark-theme .form-control::placeholder {
@@ -45,12 +45,12 @@ body.dark-theme .form-control::placeholder {
 body.dark-theme .table-striped > tbody > tr:nth-child(odd) > td,
 body.dark-theme .table-striped > tbody > tr:nth-child(odd) > th {
     color: #cacaca;
-    background: #666;
+    background: #323232;
 }
 
 body.dark-theme .table-hover > tbody > tr:hover > td,
 body.dark-theme .table-hover > tbody > tr:hover > th {
-    background-color: #666;
+    background-color: #323232;
 }
 
 body.dark-theme .table > thead > tr > th,
@@ -63,7 +63,7 @@ body.dark-theme .table > tfoot > tr > td {
 }
 
 body.dark-theme .navigation a span {
-    background: #666;
+    background: #2a2a2a;
     border: 1px solid #000;
 }
 
@@ -197,14 +197,14 @@ a:link {
 }
 
 a:active,
-a:visited {
-    text-decoration: none;
+a:visited,
+a:hover,
+a:focus{
     color: #ff6300;
 }
 
-a:hover,
-a:focus{
-    color: orange;
+a:hover{
+    text-decoration: underline;
 }
 
 .ellipsis {
