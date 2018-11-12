@@ -7,13 +7,13 @@
     {{#refresh}}
         <meta http-equiv="refresh" content="10">
     {{/refresh}}
-    <title>Fury blockchain explorer | ThePirateMine | Fury | FURY</title>
+    <title>Mask blockchain explorer | ThePirateMine | Mask | MASK</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="icon" type="image/png" sizes="16x16" href="https://thepiratemine.nl/fury.png">		
+	<link rel="icon" type="image/png" sizes="16x16" href="https://thepiratemine.nl/mask.png">		
     <style type="text/css">
         {{#css_styles}}{{/css_styles}}
     </style>
@@ -25,15 +25,15 @@
 			if($(this).hasClass('clicked')){
 				$(this).removeClass('clicked');
 				$('body').removeClass('dark-theme');
-				localStorage.setItem('theme', 'light');
+				localStorage.setItem('theme-mask', 'light');
 			}else{
 				$(this).addClass('clicked');
 				$('body').addClass('dark-theme');
-				localStorage.setItem('theme', 'dark');
+				localStorage.setItem('theme-mask', 'dark');
 			}			
 		});
 		
-		if(localStorage.getItem('theme') == 'dark'){
+		if(localStorage.getItem('theme-mask') == 'dark'){
 			$('.theme').addClass('clicked');
 			$('body').addClass('dark-theme');
 		}
@@ -44,8 +44,7 @@
 	<header>  
 		<div class="col-sm-10 col-sm-offset-1">	
 			<ul>
-				<li class="logo"><a href="/" target="_self"><img alt="logo-FURY" src="https://fury-coin.com/images/logo.png"></a></li>
-				<li>Explorer</li>
+				<li class="logo"><a href="/" target="_self">Explorer</a></li>
 				<li class="theme">
 					<span class="dark">Dark Theme</span>				
 					<span class="light">Light Theme</span>				
@@ -57,18 +56,16 @@
 	<div class="col-sm-10 col-sm-offset-1">		
 		<div class="padding-bottom-md">
 			<ul>
-				<li><a href="/" target="_self">Home</a></li>
-				<li>|</li>
 				<li><a href="/txpool" target="_self">Tx pool</a></li>
 				<li>|</li>
-				<li><a href="https://fury.thepiratemine.nl">Mining Pool</a></li>
+				<li><a href="https://mask.thepiratemine.nl">Mining Pool</a></li>
 			</ul>
 		</div>			
 		
 		<div class="card download-wallets">
 			<div class="padding-md">	
-				<a target="_blank" href="https://github.com/FuryCoin/Fury/releases/download/1.0/Fury_1.0_win_GUI.zip" class="btn btn-default">Download: <i class="fa fa-desktop"></i> GUI wallet</a>
-				<a target="_blank" href="https://github.com/FuryCoin/Fury/releases/download/1.0/Fury_1.0_win-cli.zip" class="btn btn-default">Download: <i class="fa fa-terminal" style="border: 1px solid #fff; padding: 0px 3px;"></i> CLI wallet</a>
+				<a target="_blank" href="https://github.com/mask-projects/mask-wallet/releases/download/v1.0.2/Mask.Wallet.Setup.1.0.2t.zip" class="btn btn-default">Download: <i class="fa fa-desktop"></i> GUI wallet</a>
+				<a target="_blank" href="https://github.com/mask-project/mask/releases/download/0.2.4.0/mask-win-x64-v0.2.4.0.zip" class="btn btn-default">Download: <i class="fa fa-terminal" style="border: 1px solid #fff; padding: 0px 3px;"></i> CLI wallet</a>
 			</div>	
 		</div>	
 
