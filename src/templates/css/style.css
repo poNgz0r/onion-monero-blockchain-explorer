@@ -91,7 +91,7 @@ body.dark-theme .table > thead > tr > th {
 }
 
 h1, h2 {
-    color: #7744bf;
+    color: #ff6300;
     font-weight: 500;
 }
 
@@ -184,7 +184,7 @@ h6, .h6 {
 }
 
 .orange {
-    color: #7744bf;
+    color: #ff6300;
 }
 
 #pages {
@@ -193,14 +193,14 @@ h6, .h6 {
 
 a:link {
     text-decoration: none;
-    color: #7744bf;
+    color: #ff8900;
 }
 
 a:active,
 a:visited,
 a:hover,
 a:focus{
-    color: #9562dc;
+    color: #ff6300;
 }
 
 a:hover{
@@ -269,19 +269,19 @@ table.inner-table {
 
 .btn-default {
     color: #ffffff;
-    background-color: #7744bf;
-    border-color: #7744bf;
+    background-color: #ff6300;
+    border-color: #ff6300;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
     color: #ffffff;
-    background-color: #462772;
-    border-color: #462772;
+    background-color: #cd5000;
+    border-color: #cd5000;
 }
 
 .btn-default.disabled, .btn-default[disabled], fieldset[disabled] .btn-default, .btn-default.disabled:hover, .btn-default[disabled]:hover, fieldset[disabled] .btn-default:hover, .btn-default.disabled:focus, .btn-default[disabled]:focus, fieldset[disabled] .btn-default:focus, .btn-default.disabled:active, .btn-default[disabled]:active, fieldset[disabled] .btn-default:active, .btn-default.disabled.active, .btn-default[disabled].active, fieldset[disabled] .btn-default.active {
-    background-color: #7744bf;
-    border-color: #7744bf;
+    background-color: #ff6300;
+    border-color: #ff6300;
 }
 
 /* Bootstrap Form Controls */
@@ -581,7 +581,7 @@ table.inner-table {
     font-size: 16px;
     color: #262626;
     background: #fafafa;
-    border-color: #7744bf;
+    border-color: #ff6300;
     font-family: "Roboto", Helvetica, Arial, sans-serif;
     font-size: 16px;
 }
@@ -609,9 +609,9 @@ table.inner-table {
 }
 
 .input-group-addon {
-    background-color: #7744bf;
+    background-color: #ff6300;
     color: #fff;
-    border-color: #7744bf;
+    border-color: #ff6300;
 }
 
 input#toggle-1[type=checkbox] {
@@ -667,7 +667,7 @@ header {
     background: #313131;
     color: #fff;
     margin-bottom: 20px;
-    border-bottom: 2px solid #7744bf;
+    border-bottom: 2px solid #ff6300;
 }
 
 header ul {
@@ -703,7 +703,7 @@ header ul > li.theme .light:hover,
 header ul > li.theme .dark:active,
 header ul > li.theme .dark:focus,
 header ul > li.theme .dark:hover {
-    background: #7744bf;
+    background: #ff6300;
 }
 
 header ul > li.theme span {
@@ -716,14 +716,14 @@ header ul > li.theme span {
     -webkit-transition: .5s all ease;
     -o-transition: .5s all ease;
     transition: .5s all ease;
-    border: 1px solid #7744bf;
+    border: 1px solid #ff6300;
 }
 
 header li.logo {
     display: flex;
     align-items: center;
     padding-left: 45px;
-    background: url('http://mask.team/index_files/header-image-mask.png') no-repeat left center;
+    background: url('https://fury-coin.com/images/logo.png') no-repeat left center;
     background-size: 35px 35px;
 }
 
@@ -745,7 +745,7 @@ header li > a:visited {
 }
 
 header li > a:hover {
-    color: #7744bf;
+    color: #ff6300;
     transition: all 0.35s ease;
 }
 

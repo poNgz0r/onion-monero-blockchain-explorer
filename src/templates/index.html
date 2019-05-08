@@ -18,40 +18,39 @@
 {{/is_page_zero}}
 
 <div class="table-responsive">
-		<table class="table table-hover table-striped">
-			<thead>
-				<tr>
-					<th>height</th>
-					<th>age {{age_format}} (Δm)</th>
-					<th>block hash</th>
-					<th>txs</th>
-					<th>fees</th>
-					<th>outputs</th>
-					<th>ring size</th>
-					<th>size [kB]</th>
-				</tr>
-			</thead>
-			{{#blocks}}
+	<table class="table table-hover table-striped">
+		<thead>
 			<tr>
-				<td><a href="/block/{{height}}">{{height}}</a></td>
-				<td>{{age}} ({{time_delta}})</td>
-				<td><a href="/block/{{hash}}">{{hash}}</a></td>
-				<td>{{notx}}</td>
-				<td>{{fees}}</td>
-				<td>{{xmr_outputs}}</td>
-				<td>{{mixin_range}}</td>
-				<td>{{blksize}}</td>
+				<th>height</th>
+				<th>age {{age_format}} (Δm)</th>
+				<th>block hash</th>
+				<th>txs</th>
+				<th>fees</th>
+				<th>outputs</th>
+				<th>ring size</th>
+				<th>size [kB]</th>
 			</tr>
-			{{/blocks}}
-		</table>
+		</thead>
+		{{#blocks}}
+		<tr>
+			<td><a href="/block/{{height}}">{{height}}</a></td>
+			<td>{{age}} ({{time_delta}})</td>
+			<td><a href="/block/{{hash}}">{{hash}}</a></td>
+			<td>{{notx}}</td>
+			<td>{{fees}}</td>
+			<td>{{xmr_outputs}}</td>
+			<td>{{mixin_range}}</td>
+			<td>{{blksize}}</td>
+		</tr>
+		{{/blocks}}
+	</table>
+</div>
 
-		<div style="text-align: center;">
-		 {{^is_page_zero}}
-		   <a href="/page/{{prev_page}}">previous page</a> |
-		   <a href="/">first page</a> |
-		 {{/is_page_zero}}
-			current page: {{page_no}}/<a href="/page/{{total_page_no}}">{{total_page_no}}</a>
-			| <a href="/page/{{next_page}}">next page</a>
-		</div>
-
+<div style="text-align: center;">
+ {{^is_page_zero}}
+   <a href="/page/{{prev_page}}">previous page</a> |
+   <a href="/">first page</a> |
+ {{/is_page_zero}}
+	current page: {{page_no}}/<a href="/page/{{total_page_no}}">{{total_page_no}}</a>
+	| <a href="/page/{{next_page}}">next page</a>
 </div>

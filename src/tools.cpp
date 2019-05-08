@@ -7,7 +7,7 @@
 #include <thread>
 
 
-namespace xmreg
+namespace furyeg
 {
 
 /**
@@ -72,7 +72,7 @@ get_tx_pub_key_from_str_hash(Blockchain& core_storage, const string& hash_str, t
 }
 
 /**
-* Parse monero address in a string form into
+* Parse fury address in a string form into
 * cryptonote::account_public_address object
 */
 bool
@@ -92,7 +92,7 @@ parse_str_address(const string& address_str,
 
 
 /**
-* Return string representation of monero address
+* Return string representation of fury address
 */
 string
 print_address(const address_parse_info& address_info, cryptonote::network_type nettype)
@@ -239,19 +239,19 @@ generate_key_image(const crypto::key_derivation& derivation,
 string
 get_default_lmdb_folder(cryptonote::network_type nettype)
 {
-    // default path to monero folder
-    // on linux this is /home/<username>/.bitmonero
-    string default_monero_dir = tools::get_default_data_dir();
+    // default path to fury folder
+    // on linux this is /home/<username>/.fury
+    string default_fury_dir = tools::get_default_data_dir();
 
     if (nettype == cryptonote::network_type::TESTNET)
-        default_monero_dir += "/testnet";
+        default_fury_dir += "/testnet";
     if (nettype == cryptonote::network_type::STAGENET)
-        default_monero_dir += "/stagenet";
+        default_fury_dir += "/stagenet";
 
 
     // the default folder of the lmdb blockchain database
     // is therefore as follows
-    return default_monero_dir + string("/lmdb");
+    return default_fury_dir + string("/lmdb");
 }
 
 
@@ -266,7 +266,7 @@ get_blockchain_path(const boost::optional<string>& bc_path,
                     cryptonote::network_type nettype)
 {
     // the default folder of the lmdb blockchain database
-    string default_lmdb_dir   = xmreg::get_default_lmdb_folder(nettype);
+    string default_lmdb_dir   = furyeg::get_default_lmdb_folder(nettype);
 
     blockchain_path = bc_path
                       ? bf::path(*bc_path)
@@ -281,7 +281,7 @@ get_blockchain_path(const boost::optional<string>& bc_path,
         return false;
     }
 
-    blockchain_path = xmreg::remove_trailing_path_separator(blockchain_path);
+    blockchain_path = furyeg::remove_trailing_path_separator(blockchain_path);
 
     return true;
 }
@@ -290,20 +290,20 @@ get_blockchain_path(const boost::optional<string>& bc_path,
 uint64_t
 sum_money_in_outputs(const transaction& tx)
 {
-    uint64_t sum_xmr {0};
+    uint64_t sum_fury {0};
 
     for (const tx_out& txout: tx.vout)
     {
-        sum_xmr += txout.amount;
+        sum_fury += txout.amount;
     }
 
-    return sum_xmr;
+    return sum_fury;
 }
 
 pair<uint64_t, uint64_t>
 sum_money_in_outputs(const string& json_str)
 {
-    pair<uint64_t, uint64_t> sum_xmr {0, 0};
+    pair<uint64_t, uint64_t> sum_fury {0, 0};
 
     json j;
 
@@ -314,31 +314,31 @@ sum_money_in_outputs(const string& json_str)
     catch (std::invalid_argument& e)
     {
         cerr << "sum_money_in_outputs: " << e.what() << endl;
-        return sum_xmr;
+        return sum_fury;
     }
 
     for (json& vout: j["vout"])
     {
-        sum_xmr.first += vout["amount"].get<uint64_t>();
-        ++sum_xmr.second;
+        sum_fury.first += vout["amount"].get<uint64_t>();
+        ++sum_fury.second;
     }
 
 
-    return sum_xmr;
+    return sum_fury;
 };
 
 pair<uint64_t, uint64_t>
 sum_money_in_outputs(const json& _json)
 {
-    pair<uint64_t, uint64_t> sum_xmr {0ULL, 0ULL};
+    pair<uint64_t, uint64_t> sum_fury {0ULL, 0ULL};
 
     for (const json& vout: _json["vout"])
     {
-        sum_xmr.first += vout["amount"].get<uint64_t>();
-        ++sum_xmr.second;
+        sum_fury.first += vout["amount"].get<uint64_t>();
+        ++sum_fury.second;
     }
 
-    return sum_xmr;
+    return sum_fury;
 };
 
 
@@ -349,8 +349,8 @@ summary_of_in_out_rct(
         vector<txin_to_key>& input_key_imgs)
 {
 
-    uint64_t xmr_outputs       {0};
-    uint64_t xmr_inputs        {0};
+    uint64_t fury_outputs       {0};
+    uint64_t fury_inputs        {0};
     uint64_t mixin_no          {0};
     uint64_t num_nonrct_inputs {0};
 
@@ -370,7 +370,7 @@ summary_of_in_out_rct(
 
         output_pub_keys.push_back(make_pair(txout_key, txout.amount));
 
-        xmr_outputs += txout.amount;
+        fury_outputs += txout.amount;
     }
 
     size_t input_no = tx.vin.size();
@@ -387,7 +387,7 @@ summary_of_in_out_rct(
         const cryptonote::txin_to_key& tx_in_to_key
                 = boost::get<cryptonote::txin_to_key>(tx.vin[i]);
 
-        xmr_inputs += tx_in_to_key.amount;
+        fury_inputs += tx_in_to_key.amount;
 
         if (tx_in_to_key.amount != 0)
         {
@@ -404,7 +404,7 @@ summary_of_in_out_rct(
     } //  for (size_t i = 0; i < input_no; ++i)
 
 
-    return {xmr_outputs, xmr_inputs, mixin_no, num_nonrct_inputs};
+    return {fury_outputs, fury_inputs, mixin_no, num_nonrct_inputs};
 };
 
 
@@ -412,8 +412,8 @@ summary_of_in_out_rct(
 array<uint64_t, 6>
 summary_of_in_out_rct(const json& _json)
 {
-    uint64_t xmr_outputs       {0};
-    uint64_t xmr_inputs        {0};
+    uint64_t fury_outputs       {0};
+    uint64_t fury_inputs        {0};
     uint64_t no_outputs        {0};
     uint64_t no_inputs         {0};
     uint64_t mixin_no          {0};
@@ -421,7 +421,7 @@ summary_of_in_out_rct(const json& _json)
 
     for (const json& vout: _json["vout"])
     {
-        xmr_outputs += vout["amount"].get<uint64_t>();
+        fury_outputs += vout["amount"].get<uint64_t>();
     }
 
     no_outputs = _json["vout"].size();
@@ -430,7 +430,7 @@ summary_of_in_out_rct(const json& _json)
     {
         uint64_t amount = vin["key"]["amount"].get<uint64_t>();
 
-        xmr_inputs += amount;
+        fury_inputs += amount;
 
         if (amount != 0)
             ++num_nonrct_inputs;
@@ -440,14 +440,14 @@ summary_of_in_out_rct(const json& _json)
 
     mixin_no = _json["vin"].at(0)["key"]["key_offsets"].size() - 1;
 
-    return {xmr_outputs, xmr_inputs, no_outputs, no_inputs, mixin_no, num_nonrct_inputs};
+    return {fury_outputs, fury_inputs, no_outputs, no_inputs, mixin_no, num_nonrct_inputs};
 };
 
 
 uint64_t
 sum_money_in_inputs(const transaction& tx)
 {
-    uint64_t sum_xmr {0};
+    uint64_t sum_fury {0};
 
     size_t input_no = tx.vin.size();
 
@@ -463,16 +463,16 @@ sum_money_in_inputs(const transaction& tx)
         const cryptonote::txin_to_key& tx_in_to_key
                 = boost::get<cryptonote::txin_to_key>(tx.vin[i]);
 
-        sum_xmr += tx_in_to_key.amount;
+        sum_fury += tx_in_to_key.amount;
     }
 
-    return sum_xmr;
+    return sum_fury;
 }
 
 pair<uint64_t, uint64_t>
 sum_money_in_inputs(const string& json_str)
 {
-    pair<uint64_t, uint64_t> sum_xmr {0, 0};
+    pair<uint64_t, uint64_t> sum_fury {0, 0};
 
     json j;
     try
@@ -482,31 +482,31 @@ sum_money_in_inputs(const string& json_str)
     catch (std::invalid_argument& e)
     {
         cerr << "sum_money_in_outputs: " << e.what() << endl;
-        return sum_xmr;
+        return sum_fury;
     }
 
     for (json& vin: j["vin"])
     {
-        sum_xmr.first += vin["key"]["amount"].get<uint64_t>();
-        ++sum_xmr.second;
+        sum_fury.first += vin["key"]["amount"].get<uint64_t>();
+        ++sum_fury.second;
     }
 
-    return sum_xmr;
+    return sum_fury;
 };
 
 
 pair<uint64_t, uint64_t>
 sum_money_in_inputs(const json& _json)
 {
-    pair<uint64_t, uint64_t> sum_xmr {0, 0};
+    pair<uint64_t, uint64_t> sum_fury {0, 0};
 
     for (const json& vin: _json["vin"])
     {
-        sum_xmr.first += vin["key"]["amount"].get<uint64_t>();
-        ++sum_xmr.second;
+        sum_fury.first += vin["key"]["amount"].get<uint64_t>();
+        ++sum_fury.second;
     }
 
-    return sum_xmr;
+    return sum_fury;
 };
 
 uint64_t
@@ -580,27 +580,27 @@ count_nonrct_inputs(const json& _json)
 array<uint64_t, 2>
 sum_money_in_tx(const transaction& tx)
 {
-    array<uint64_t, 2> sum_xmr;
+    array<uint64_t, 2> sum_fury;
 
-    sum_xmr[0] = sum_money_in_inputs(tx);
-    sum_xmr[1] = sum_money_in_outputs(tx);
+    sum_fury[0] = sum_money_in_inputs(tx);
+    sum_fury[1] = sum_money_in_outputs(tx);
 
-    return sum_xmr;
+    return sum_fury;
 };
 
 
 array<uint64_t, 2>
 sum_money_in_txs(const vector<transaction>& txs)
 {
-    array<uint64_t, 2> sum_xmr {0,0};
+    array<uint64_t, 2> sum_fury {0,0};
 
     for (const transaction& tx: txs)
     {
-        sum_xmr[0] += sum_money_in_inputs(tx);
-        sum_xmr[1] += sum_money_in_outputs(tx);
+        sum_fury[0] += sum_money_in_inputs(tx);
+        sum_fury[1] += sum_money_in_outputs(tx);
     }
 
-    return sum_xmr;
+    return sum_fury;
 };
 
 
@@ -935,7 +935,7 @@ decode_ringct(rct::rctSig const& rv,
         switch (rv.type)
         {
             case rct::RCTTypeSimple:
-            case rct::RCTTypeSimpleBulletproof:
+            case rct::RCTTypeBulletproof:
                 amount = rct::decodeRctSimple(rv,
                                               rct::sk2rct(scalar1),
                                               i,
@@ -943,7 +943,6 @@ decode_ringct(rct::rctSig const& rv,
                                               hw::get_device("default"));
                 break;
             case rct::RCTTypeFull:
-            case rct::RCTTypeFullBulletproof:
                 amount = rct::decodeRct(rv,
                                         rct::sk2rct(scalar1),
                                         i,
@@ -1048,7 +1047,7 @@ decrypt(const std::string &ciphertext,
     }
 
     crypto::chacha_key key;
-    crypto::generate_chacha_key(&skey, sizeof(skey), key);
+    crypto::generate_chacha_key(&skey, sizeof(skey), key, 1);
 
     const crypto::chacha_iv &iv = *(const crypto::chacha_iv*)&ciphertext[0];
 
@@ -1154,7 +1153,7 @@ is_output_ours(const size_t& output_index,
 
     // get the tx output public key
     // that normally would be generated for us,
-    // if someone had sent us some xmr.
+    // if someone had sent us some fury.
     public_key pubkey;
 
     derive_public_key(derivation,
@@ -1244,7 +1243,7 @@ get_human_readable_timestamp(uint64_t ts)
 
     gmtime_r(&tt, &tm);
 
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %I:%M:%S", &tm);
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &tm);
 
     return std::string(buffer);
 }
@@ -1266,4 +1265,116 @@ pause_execution(uint64_t no_seconds, const string& text)
     cout << endl;
 }
 
+string
+make_comma_sep_number(uint64_t value)
+{
+    string result;
+    result.reserve(20/*Digits*/ + 6 /*Commas*/);
+
+    uint64_t tmp = value;
+    int len = 0;
+    int thousands_count = -1;
+
+    for (; tmp > 0; tmp /= 10)
+    {
+        len++;
+        if (++thousands_count == 3)
+        {
+            len++;
+            thousands_count = 0;
+        }
+    }
+
+    result.append(len, ',');
+    len--;
+    thousands_count = 0;
+
+    for (tmp = value; tmp > 0; len--)
+    {
+        if (thousands_count++ == 3)
+        {
+            thousands_count = 0;
+        }
+        else
+        {
+            char digit = '0' + (tmp % 10);
+            tmp /= 10;
+            result.replace(len, 1, 1, digit);
+        }
+    }
+
+    return result;
 }
+
+std::string bytes_to_hex(char const *bytes, int len)
+{
+    std::string result;
+    result.reserve(len * 2);
+
+    static char const _4bits_to_hex_char[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    for (int i = 0; i < len; i++)
+    {
+      char byte  = bytes[i];
+      char hex01 = (byte >> 0) & 0xF;
+      char hex02 = byte >> 4;
+
+      result.push_back(_4bits_to_hex_char[hex01]);
+      result.push_back(_4bits_to_hex_char[hex02]);
+    }
+
+    return result;
+}
+
+void
+get_human_readable_timestamp(uint64_t ts, std::string *result)
+{
+    result->clear();
+    if (ts < 1234567890)
+        return;
+
+    char buf[64];
+    time_t tt = ts;
+    struct tm tm;
+    gmtime_r(&tt, &tm);
+    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
+    *result = buf;
+}
+
+
+char const *get_human_time_ago(time_t t, time_t now)
+{
+    if (t == now)
+      return "now";
+
+    static char buf[128];
+    buf[0] = 0;
+
+    char *buf_ptr       = buf;
+    char const *buf_end = buf + sizeof(buf);
+    time_t dt           = t > now ? t - now : now - t;
+
+    if (t > now)
+    {
+      buf_ptr += snprintf(buf_ptr, buf_ptr - buf_end, "in ");
+    }
+
+    if (dt < 90)             buf_ptr += snprintf(buf_ptr, buf_ptr - buf_end, "%zu seconds", dt);
+    else if (dt < 90 * 60)   buf_ptr += snprintf(buf_ptr, buf_ptr - buf_end, "%zu minutes", dt/60);
+    else if (dt < 36 * 3600) buf_ptr += snprintf(buf_ptr, buf_ptr - buf_end, "%zu hours", dt/3600);
+    else                     buf_ptr += snprintf(buf_ptr, buf_ptr - buf_end, "%zu days", dt/(3600*24));
+
+    if (t < now)
+    {
+      buf_ptr += snprintf(buf_ptr, buf_ptr - buf_end, " ago");
+    }
+
+    return buf;
+}
+
+string
+tx_to_hex(transaction const& tx)
+{
+    return epee::string_tools::buff_to_hex_nodelimer(t_serializable_object_to_blob(tx));
+}
+
+} // namespace furyeg

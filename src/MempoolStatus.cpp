@@ -6,7 +6,7 @@
 
 #include "rpccalls.h"
 
-namespace xmreg
+namespace furyeg
 {
 
 using namespace std;
@@ -97,7 +97,7 @@ MempoolStatus::start_mempool_status_thread()
 bool
 MempoolStatus::read_mempool()
 {
-    rpccalls rpc {deamon_url};
+    rpccalls rpc {daemon_url};
 
     string error_msg;
 
@@ -110,11 +110,31 @@ MempoolStatus::read_mempool()
     // get txs in the mempool
     std::vector<tx_info> mempool_tx_info;
 
-    if (!rpc.get_mempool(mempool_tx_info))
+    //std::vector<tx_info> pool_tx_info;
+    std::vector<spent_key_image_info> pool_key_image_info;
+
+    // get txpool from lmdb database instead of rpc call
+    if (!mcore->get_mempool().get_transactions_and_spent_keys_info(
+                mempool_tx_info,
+                pool_key_image_info))
     {
         cerr << "Getting mempool failed " << endl;
         return false;
     }
+
+    (void) pool_key_image_info;
+
+    // sort txpool txs
+
+    // mempool txs are not sorted base on their arival time,
+    // so we sort it here.
+
+    std::sort(mempool_tx_info.begin(), mempool_tx_info.end(),
+    [](tx_info& t1, tx_info& t2)
+    {
+        return t1.receive_time > t2.receive_time;
+    });
+
 
     // if dont have tx_blob member, construct tx
     // from json obtained from the rpc call
@@ -130,8 +150,7 @@ MempoolStatus::read_mempool()
         crypto::hash tx_hash;
         crypto::hash tx_prefix_hash;
 
-        if (!parse_and_validate_tx_from_blob(
-                _tx_info.tx_blob, tx, tx_hash, tx_prefix_hash))
+        if (!parse_and_validate_tx_from_blob(_tx_info.tx_blob, tx, tx_hash, tx_prefix_hash))
         {
             cerr << "Cant make tx from _tx_info.tx_blob" << endl;
             return false;
@@ -139,25 +158,27 @@ MempoolStatus::read_mempool()
 
         mempool_size_kB += _tx_info.blob_size;
 
-        local_copy_of_mempool_txs.push_back(mempool_tx {tx_hash, tx});
+        local_copy_of_mempool_txs.push_back(mempool_tx{});
 
         mempool_tx& last_tx = local_copy_of_mempool_txs.back();
+
+        last_tx.tx_hash = tx_hash;
+        last_tx.tx = tx;
 
         // key images of inputs
         vector<txin_to_key> input_key_imgs;
 
-        // public keys and xmr amount of outputs
+        // public keys and fury amount of outputs
         vector<pair<txout_to_key, uint64_t>> output_pub_keys;
 
-        // sum xmr in inputs and ouputs in the given tx
+        // sum fury in inputs and ouputs in the given tx
         const array<uint64_t, 4>& sum_data = summary_of_in_out_rct(
                tx, output_pub_keys, input_key_imgs);
 
 
-
         double tx_size =  static_cast<double>(_tx_info.blob_size)/1024.0;
 
-        double payed_for_kB = XMR_AMOUNT(_tx_info.fee) / tx_size;
+        double payed_for_kB = FURY_AMOUNT(_tx_info.fee) / tx_size;
 
         last_tx.receive_time = _tx_info.receive_time;
 
@@ -168,11 +189,13 @@ MempoolStatus::read_mempool()
         last_tx.mixin_no          = sum_data[2];
         last_tx.num_nonrct_inputs = sum_data[3];
 
-        last_tx.fee_str          = xmreg::xmr_amount_to_str(_tx_info.fee, "{:0.3f}", false);
+        last_tx.fee_str          = furyeg::fury_amount_to_str(_tx_info.fee, "{:0.4f}", false);
+        last_tx.fee_micro_str    = furyeg::fury_amount_to_str(_tx_info.fee*1.0e6, "{:04.0f}", false);
         last_tx.payed_for_kB_str = fmt::format("{:0.4f}", payed_for_kB);
-        last_tx.xmr_inputs_str   = xmreg::xmr_amount_to_str(last_tx.sum_inputs , "{:0.3f}");
-        last_tx.xmr_outputs_str  = xmreg::xmr_amount_to_str(last_tx.sum_outputs, "{:0.3f}");
-        last_tx.timestamp_str    = xmreg::timestamp_to_str_gm(_tx_info.receive_time);
+        last_tx.payed_for_kB_micro_str = fmt::format("{:04.0f}", payed_for_kB*1e6);
+        last_tx.fury_inputs_str   = furyeg::fury_amount_to_str(last_tx.sum_inputs , "{:0.3f}");
+        last_tx.fury_outputs_str  = furyeg::fury_amount_to_str(last_tx.sum_outputs, "{:0.3f}");
+        last_tx.timestamp_str    = furyeg::timestamp_to_str_gm(_tx_info.receive_time);
 
         last_tx.txsize           = fmt::format("{:0.2f}", tx_size);
 
@@ -218,7 +241,7 @@ MempoolStatus::read_mempool()
 bool
 MempoolStatus::read_network_info()
 {
-    rpccalls rpc {deamon_url};
+    rpccalls rpc {daemon_url};
 
     COMMAND_RPC_GET_INFO::response rpc_network_info;
 
@@ -244,6 +267,10 @@ MempoolStatus::read_network_info()
     if (!rpc.get_hardfork_info(rpc_hardfork_info))
         return false;
 
+    COMMAND_RPC_GET_STAKING_REQUIREMENT::response staking_requirement = {};
+    uint64_t query_height = (rpc_network_info.height < rpc_network_info.target_height) ? rpc_network_info.target_height : rpc_network_info.height;
+    if (!rpc.get_staking_requirement(query_height, staking_requirement))
+        return false;
 
     network_info local_copy;
 
@@ -264,8 +291,10 @@ MempoolStatus::read_network_info()
     local_copy.cumulative_difficulty      = rpc_network_info.cumulative_difficulty;
     local_copy.block_size_limit           = rpc_network_info.block_size_limit;
     local_copy.block_size_median          = rpc_network_info.block_size_median;
+    local_copy.block_weight_limit         = rpc_network_info.block_weight_limit;
     local_copy.start_time                 = rpc_network_info.start_time;
-
+    local_copy.staking_requirement        = staking_requirement.staking_requirement;
+    local_copy.total_blockchain_size      = rpc_network_info.database_size;
 
     strncpy(local_copy.block_size_limit_str, fmt::format("{:0.2f}",
                                              static_cast<double>(
@@ -277,6 +306,11 @@ MempoolStatus::read_network_info()
                                               static_cast<double>(
                                               local_copy.block_size_median) / 1024.0).c_str(),
                                               sizeof(local_copy.block_size_median_str));
+                                              
+    strncpy(local_copy.total_blockchain_size_str, fmt::format("{:0.2f}",
+                                                  static_cast<double>(
+                                                  local_copy.total_blockchain_size) / 1024.0 / 1024.0 / 1024.0).c_str(),
+                                                  sizeof(local_copy.total_blockchain_size_str));                                                
 
     epee::string_tools::hex_to_pod(rpc_network_info.top_block_hash,
                                    local_copy.top_block_hash);
@@ -316,17 +350,18 @@ MempoolStatus::is_thread_running()
     return is_running;
 }
 
-bf::path MempoolStatus::blockchain_path {"/root/.fury7/lmdb"};
-string MempoolStatus::deamon_url {"http:://127.0.0.1:18081"};
+string MempoolStatus::daemon_url {"http:://127.0.0.1:18081"};
+bf::path MempoolStatus::blockchain_path {"/home/mwo/.fury/lmdb"};
 cryptonote::network_type MempoolStatus::nettype {cryptonote::network_type::MAINNET};
 atomic<bool>       MempoolStatus::is_running {false};
 boost::thread      MempoolStatus::m_thread;
 Blockchain*        MempoolStatus::core_storage {nullptr};
-xmreg::MicroCore*  MempoolStatus::mcore {nullptr};
+furyeg::MicroCore*  MempoolStatus::mcore {nullptr};
 vector<MempoolStatus::mempool_tx> MempoolStatus::mempool_txs;
 atomic<MempoolStatus::network_info> MempoolStatus::current_network_info;
 atomic<uint64_t> MempoolStatus::mempool_no {0};   // no of txs
 atomic<uint64_t> MempoolStatus::mempool_size {0}; // size in bytes.
 uint64_t MempoolStatus::mempool_refresh_time {10};
 mutex MempoolStatus::mempool_mutx;
+MempoolStatus::service_node_state MempoolStatus::node_state = {};
 }

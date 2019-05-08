@@ -4,7 +4,7 @@
 
 #include "MicroCore.h"
 
-namespace xmreg
+namespace furyeg
 {
 /**
  * The constructor is interesting, as
@@ -20,7 +20,8 @@ namespace xmreg
  */
 MicroCore::MicroCore():
         m_mempool(m_blockchain_storage),
-        m_blockchain_storage(m_mempool)
+        m_blockchain_storage(m_mempool, m_service_node_list, m_deregister_vote_pool),
+        m_service_node_list(m_blockchain_storage)
 {
     m_device = &hw::get_device("default");
 }
@@ -62,9 +63,7 @@ MicroCore::init(const string& _blockchain_path, network_type nt)
     // check if the blockchain database
     // is successful opened
     if(!db->is_open())
-    {
         return false;
-    }
 
     // initialize Blockchain object to manage
     // the database.
@@ -79,6 +78,12 @@ Blockchain&
 MicroCore::get_core()
 {
     return m_blockchain_storage;
+}
+
+tx_memory_pool&
+MicroCore::get_mempool()
+{
+    return m_mempool;
 }
 
 /**
@@ -151,7 +156,7 @@ MicroCore::get_tx(const string& tx_hash_str, transaction& tx)
     // parse tx hash string to hash object
     crypto::hash tx_hash;
 
-    if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
+    if (!furyeg::parse_str_secret_key(tx_hash_str, tx_hash))
     {
         cerr << "Cant parse tx hash: " << tx_hash_str << endl;
         return false;
@@ -211,78 +216,6 @@ MicroCore::find_output_in_tx(const transaction& tx,
 }
 
 
-/**
- * Returns tx hash in a given block which
- * contains given output's public key
- */
-bool
-MicroCore::get_tx_hash_from_output_pubkey(const public_key& output_pubkey,
-                                          const uint64_t& block_height,
-                                          crypto::hash& tx_hash,
-                                          cryptonote::transaction& tx_found)
-{
-
-    tx_hash = null_hash;
-
-    // get block of given height
-    block blk;
-    if (!get_block_by_height(block_height, blk))
-    {
-        cerr << "Cant get block of height: " << block_height << endl;
-        return false;
-    }
-
-
-    // get all transactions in the block found
-    // initialize the first list with transaction for solving
-    // the block i.e. coinbase.
-    list<transaction> txs {blk.miner_tx};
-    list<crypto::hash> missed_txs;
-
-    if (!m_blockchain_storage.get_transactions(blk.tx_hashes, txs, missed_txs))
-    {
-        cerr << "Cant find transcations in block: " << block_height << endl;
-        return false;
-    }
-
-    if (!missed_txs.empty())
-    {
-        cerr << "Transactions not found in blk: " << block_height << endl;
-
-        for (const crypto::hash& h : missed_txs)
-        {
-            cerr << " - tx hash: " << h << endl;
-        }
-
-        return false;
-    }
-
-
-    // search outputs in each transactions
-    // until output with pubkey of interest is found
-    for (const transaction& tx : txs)
-    {
-
-        tx_out found_out;
-
-        // we dont need here output_index
-        size_t output_index;
-
-        if (find_output_in_tx(tx, output_pubkey, found_out, output_index))
-        {
-            // we found the desired public key
-            tx_hash = get_transaction_hash(tx);
-            tx_found = tx;
-
-            return true;
-        }
-
-    }
-
-    return false;
-}
-
-
 uint64_t
 MicroCore::get_blk_timestamp(uint64_t blk_height)
 {
@@ -332,6 +265,28 @@ init_blockchain(const string& path,
 
     return true;
 }
+
+
+bool
+MicroCore::get_block_complete_entry(block const& b, block_complete_entry& bce)
+{
+    bce.block = cryptonote::block_to_blob(b);
+
+    for (const auto &tx_hash: b.tx_hashes)
+    {
+      transaction tx;
+
+      if (!get_tx(tx_hash, tx))
+        return false;
+
+      cryptonote::blobdata txblob =  tx_to_blob(tx);
+
+      bce.txs.push_back(txblob);
+    }
+
+    return true;
+}
+
 
 string
 MicroCore::get_blkchain_path()

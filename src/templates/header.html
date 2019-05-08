@@ -7,13 +7,13 @@
     {{#refresh}}
         <meta http-equiv="refresh" content="10">
     {{/refresh}}
-    <title>Mask blockchain explorer | ThePirateMine | Mask | MASK</title>
+    <title>FuryCoin Explorer | FURY | PiratePools</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="icon" type="image/png" sizes="16x16" href="https://thepiratemine.nl/mask.png">		
+	<link rel="icon" type="image/png" sizes="16x16" href="https://fury.piratepools.nl/logo.png">		
     <style type="text/css">
         {{#css_styles}}{{/css_styles}}
     </style>
@@ -56,29 +56,41 @@
 	<div class="col-sm-10 col-sm-offset-1">		
 		<div class="padding-bottom-md">
 			<ul>
-				<li><a href="/txpool" target="_self">Tx pool</a></li>
-				<li>|</li>
-				<li><a href="https://mask.thepiratemine.nl">Mining Pool</a></li>
+				<li><a href="/txpool" target="_self">Transaction pool</a></li>
 			</ul>
 		</div>			
-		
-		<div class="card download-wallets">
-			<div class="padding-md">	
-				<a target="_blank" href="https://github.com/mask-projects/mask-wallet/releases/download/v1.0.2/Mask.Wallet.Setup.1.0.2t.zip" class="btn btn-default">Download: <i class="fa fa-desktop"></i> GUI wallet</a>
-				<a target="_blank" href="https://github.com/mask-project/mask/releases/download/0.2.4.0/mask-win-x64-v0.2.4.0.zip" class="btn btn-default">Download: <i class="fa fa-terminal" style="border: 1px solid #fff; padding: 0px 3px;"></i> CLI wallet</a>
-			</div>	
-		</div>	
 
 		<div class="card">		
 			<div class="padding-left-md padding-right-md padding-bottom-md">	
 				<h3>Search for block height, block hash or transaction hash</h3>
 				<form action="/search" method="get">
 					<div class="input-group">
-						<input class="form-control" type="text" name="value" size="120" placeholder="block height, block hash, transaction hash">
+						<input class="form-control" type="text" name="value" size="120" placeholder="block height, block hash or transaction hash">
 						<span class="input-group-btn">
 							<button class="btn btn-default">Search</button>
 						</span>
 					</div>
 				</form>
+			</div>
+		</div>
+				
+		<div class="card">		
+			<div class="padding-left-md padding-right-md padding-bottom-md">					
+				<h3>Search for service node public key</h3>
+				<form class="service-node" action="/service_node/" method="get">
+					<div class="input-group">
+						<input class="node-input form-control" type="text" name="value" size="120" placeholder="service node public key">
+						<span class="input-group-btn">
+							<button class="btn btn-default">Search</button>
+						</span>
+					</div>
+					<script>
+					$(function(){
+						$('.node-input').on('keyup', function(){
+							$('form.service-node').attr('action', '/service_node/' + $(this).val()); 
+						});
+					});
+					</script>
+				</form>				
 			</div>
 		</div>

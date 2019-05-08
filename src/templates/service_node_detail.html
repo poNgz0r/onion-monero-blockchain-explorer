@@ -1,0 +1,56 @@
+<div class="card">
+	<div class="col-sm-12">	
+		<h2>Service Node Public Key: {{public_key}}</h2>
+		<h4>Operator Address: {{operator_address}}</h4>
+
+		<h2>Metadata</h2>
+		<div class="table-responsive">
+			<table class="table table-hover table-striped">
+				<thead>
+					<th>Staking Requirement</th>
+					<th style="text-align: center;">Last Reward At Height/Index</th>
+					<th style="text-align: center;">Total Contributed</th>
+					<th style="text-align: center;">Operator Cut</th>
+					<th style="text-align: center;">Total Reserved</th>
+					<th style="text-align: center;">Register Height</th>
+					<th style="text-align: center;">Last Uptime Proof</th>
+				</thead>
+				<tr>
+					<td>{{staking_requirement}}</td>
+					<td style="text-align: center;"><a href="/block/{{last_reward_at_block}}">{{last_reward_at_block}}</a> / {{last_reward_at_block_tx_index}}</td>
+					<td style="text-align: center;">{{total_contributed}}</td>
+					<td style="text-align: center;">{{operator_cut}}%</td>
+					<td style="text-align: center;">{{total_reserved}}</td>
+					<td style="text-align: center;"><a href="/block/{{register_height}}">{{register_height}}</a></td>
+					<td style="text-align: center;">{{last_uptime_proof}}</td>
+				</tr>
+			</table>
+		</div>
+		<p>{{service_node_registered_text}} </p>
+	</div>
+</div>
+
+<div class="card">
+	<div class="col-sm-12">	
+		<h2>{{num_contributors}} Contributor(s)</h2>
+		
+		<div class="table-responsive">
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>Contributor</th>
+						<th style="text-align: center;">Amount</th>
+						<th style="text-align: center;">Reserved</th>
+					</tr>
+				</thead>
+				{{#service_node_contributors_array}}
+				<tr>
+					<td>{{address}}</td>
+					<td style="text-align: center;">{{amount}}</td>
+					<td style="text-align: center;">{{reserved}}</td>
+				</tr>
+				{{/service_node_contributors_array}}
+			</table>
+		</div>
+	</div>
+</div>

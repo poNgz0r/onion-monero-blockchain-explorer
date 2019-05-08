@@ -4,28 +4,28 @@
 
 #include "rpccalls.h"
 
-namespace xmreg
+namespace furyeg
 {
 
 
-rpccalls::rpccalls(string _deamon_url,
+rpccalls::rpccalls(string _daemon_url,
          uint64_t _timeout)
-        : deamon_url {_deamon_url},
+        : daemon_url {_daemon_url},
           timeout_time {_timeout}
 {
-    epee::net_utils::parse_url(deamon_url, url);
+    epee::net_utils::parse_url(daemon_url, url);
 
     port = std::to_string(url.port);
 
     timeout_time_ms = std::chrono::milliseconds {timeout_time};
 
     m_http_client.set_server(
-            deamon_url,
+            daemon_url,
             boost::optional<epee::net_utils::http::login>{});
 }
 
 bool
-rpccalls::connect_to_monero_deamon()
+rpccalls::connect_to_fury_daemon()
 {
     //std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
@@ -45,9 +45,9 @@ rpccalls::get_current_height()
 
     std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-    if (!connect_to_monero_deamon())
+    if (!connect_to_fury_daemon())
     {
-        cerr << "get_current_height: not connected to deamon" << endl;
+        cerr << "get_current_height: not connected to daemon" << endl;
         return false;
     }
 
@@ -57,8 +57,8 @@ rpccalls::get_current_height()
 
     if (!r)
     {
-        cerr << "Error connecting to Monero deamon at "
-             << deamon_url << endl;
+        cerr << "Error connecting to Fury daemon at "
+             << daemon_url << endl;
         return 0;
     }
 
@@ -77,9 +77,9 @@ rpccalls::get_mempool(vector<tx_info>& mempool_txs)
     {
         std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-        if (!connect_to_monero_deamon())
+        if (!connect_to_fury_daemon())
         {
-            cerr << "get_mempool: not connected to deamon" << endl;
+            cerr << "get_mempool: not connected to daemon" << endl;
             return false;
         }
 
@@ -90,8 +90,8 @@ rpccalls::get_mempool(vector<tx_info>& mempool_txs)
 
     if (!r || res.status != CORE_RPC_STATUS_OK)
     {
-        cerr << "Error connecting to Monero deamon at "
-             << deamon_url << endl;
+        cerr << "Error connecting to Fury daemon at "
+             << daemon_url << endl;
         return false;
     }
 
@@ -124,9 +124,9 @@ rpccalls::commit_tx(tools::wallet2::pending_tx& ptx, string& error_msg)
 
     std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-    if (!connect_to_monero_deamon())
+    if (!connect_to_fury_daemon())
     {
-        cerr << "commit_tx: not connected to deamon" << endl;
+        cerr << "commit_tx: not connected to daemon" << endl;
         return false;
     }
 
@@ -163,9 +163,9 @@ rpccalls::get_network_info(COMMAND_RPC_GET_INFO::response& response)
     {
         std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-        if (!connect_to_monero_deamon())
+        if (!connect_to_fury_daemon())
         {
-            cerr << "get_network_info: not connected to deamon" << endl;
+            cerr << "get_network_info: not connected to daemon" << endl;
             return false;
         }
 
@@ -189,20 +189,79 @@ rpccalls::get_network_info(COMMAND_RPC_GET_INFO::response& response)
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Fury daemon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "Error connecting to Monero deamon at "
-             << deamon_url << endl;
+        cerr << "Error connecting to Fury daemon at "
+             << daemon_url << endl;
         return false;
     }
 
     response = resp_t.result;
 
+    return true;
+}
+
+bool
+rpccalls::get_staking_requirement(uint64_t height, COMMAND_RPC_GET_STAKING_REQUIREMENT::response& response)
+{
+
+    epee::json_rpc::request<cryptonote::COMMAND_RPC_GET_STAKING_REQUIREMENT::request> req_t = AUTO_VAL_INIT(req_t);
+    epee::json_rpc::response<cryptonote::COMMAND_RPC_GET_STAKING_REQUIREMENT::response, std::string> resp_t = AUTO_VAL_INIT(resp_t);
+
+    bool r {false};
+
+    req_t.params.height = height;
+    req_t.jsonrpc = "2.0";
+    req_t.id = epee::serialization::storage_entry(0);
+    req_t.method = "get_staking_requirement";
+
+    {
+        std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
+
+        if (!connect_to_fury_daemon())
+        {
+            cerr << "get_network_info: not connected to daemon" << endl;
+            return false;
+        }
+
+        r = epee::net_utils::invoke_http_json("/json_rpc",
+                                              req_t, resp_t,
+                                              m_http_client);
+    }
+
+    string err;
+
+    if (r)
+    {
+        if (resp_t.result.status == CORE_RPC_STATUS_BUSY)
+        {
+            err = "daemon is busy. Please try again later.";
+        }
+        else if (resp_t.result.status != CORE_RPC_STATUS_OK)
+        {
+            err = resp_t.result.status;
+        }
+
+        if (!err.empty())
+        {
+            cerr << "Error connecting to Fury daemon due to "
+                 << err << endl;
+            return false;
+        }
+    }
+    else
+    {
+        cerr << "Error connecting to Fury daemon at "
+             << daemon_url << endl;
+        return false;
+    }
+
+    response = resp_t.result;
     return true;
 }
 
@@ -223,9 +282,9 @@ rpccalls::get_hardfork_info(COMMAND_RPC_HARD_FORK_INFO::response& response)
     {
         std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-        if (!connect_to_monero_deamon())
+        if (!connect_to_fury_daemon())
         {
-            cerr << "get_hardfork_info: not connected to deamon" << endl;
+            cerr << "get_hardfork_info: not connected to daemon" << endl;
             return false;
         }
 
@@ -250,15 +309,15 @@ rpccalls::get_hardfork_info(COMMAND_RPC_HARD_FORK_INFO::response& response)
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Fury daemon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "Error connecting to Monero deamon at "
-             << deamon_url << endl;
+        cerr << "Error connecting to Fury daemon at "
+             << daemon_url << endl;
         return false;
     }
 
@@ -275,9 +334,9 @@ rpccalls::get_dynamic_per_kb_fee_estimate(
         uint64_t& fee,
         string& error_msg)
 {
-    epee::json_rpc::request<COMMAND_RPC_GET_PER_KB_FEE_ESTIMATE::request>
+    epee::json_rpc::request<COMMAND_RPC_GET_BASE_FEE_ESTIMATE::request>
             req_t = AUTO_VAL_INIT(req_t);
-    epee::json_rpc::response<COMMAND_RPC_GET_PER_KB_FEE_ESTIMATE::response, std::string>
+    epee::json_rpc::response<COMMAND_RPC_GET_BASE_FEE_ESTIMATE::response, std::string>
             resp_t = AUTO_VAL_INIT(resp_t);
 
 
@@ -291,9 +350,9 @@ rpccalls::get_dynamic_per_kb_fee_estimate(
     {
         std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-        if (!connect_to_monero_deamon())
+        if (!connect_to_fury_daemon())
         {
-            cerr << "get_dynamic_per_kb_fee_estimate: not connected to deamon" << endl;
+            cerr << "get_dynamic_per_kb_fee_estimate: not connected to daemon" << endl;
             return false;
         }
 
@@ -318,15 +377,15 @@ rpccalls::get_dynamic_per_kb_fee_estimate(
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Fury daemon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "Error connecting to Monero deamon at "
-             << deamon_url << endl;
+        cerr << "Error connecting to Fury daemon at "
+             << daemon_url << endl;
         return false;
     }
 
@@ -354,9 +413,9 @@ rpccalls::get_block(string const& blk_hash, block& blk, string& error_msg)
     {
         std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-        if (!connect_to_monero_deamon())
+        if (!connect_to_fury_daemon())
         {
-            cerr << "get_block: not connected to deamon" << endl;
+            cerr << "get_block: not connected to daemon" << endl;
             return false;
         }
 
@@ -381,15 +440,15 @@ rpccalls::get_block(string const& blk_hash, block& blk, string& error_msg)
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Fury daemon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "get_block: error connecting to Monero deamon at "
-             << deamon_url << endl;
+        cerr << "get_staking_requirement: error connecting to Fury daemon at "
+             << daemon_url << endl;
         return false;
     }
 
@@ -401,6 +460,85 @@ rpccalls::get_block(string const& blk_hash, block& blk, string& error_msg)
     return parse_and_validate_block_from_blob(block_bin_blob, blk);
 }
 
+bool
+rpccalls::get_service_node(COMMAND_RPC_GET_SERVICE_NODES::response &res, const std::vector<std::string> &pubkeys)
+{
+    std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
+    bool result = false;
+    if (!connect_to_fury_daemon())
+    {
+        cerr << "rpccalls::get_service_node_list_state: not connected to daemon" << endl;
+        return result;
+    }
+
+    epee::json_rpc::request<COMMAND_RPC_GET_SERVICE_NODES::request> request;
+    epee::json_rpc::response<COMMAND_RPC_GET_SERVICE_NODES::response, std::string> response;
+    request.params.service_node_pubkeys = pubkeys;
+    request.jsonrpc = "2.0";
+    request.id      = epee::serialization::storage_entry(0);
+    request.method  = pubkeys.empty() ? "get_all_service_nodes" : "get_service_nodes";
+
+    result = epee::net_utils::invoke_http_json("/json_rpc", request, response, m_http_client, timeout_time_ms);
+
+    if (!result)
+        cerr << "Error connecting to Fury daemon at " << daemon_url << endl;
+
+    res = response.result;
+    return result;
+}
+
+bool
+rpccalls::get_quorum_state(COMMAND_RPC_GET_QUORUM_STATE::response &res, uint64_t height)
+{
+    std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
+    bool result = false;
+    if (!connect_to_fury_daemon())
+    {
+        cerr << "rpccalls::get_quorum_state: not connected to daemon" << endl;
+        return result;
+    }
+
+    epee::json_rpc::request<COMMAND_RPC_GET_QUORUM_STATE::request> request;
+    epee::json_rpc::response<COMMAND_RPC_GET_QUORUM_STATE::response, std::string> response;
+    request.params.height = height;
+    request.jsonrpc = "2.0";
+    request.id      = epee::serialization::storage_entry(0);
+    request.method  = "get_quorum_state";
+
+    result = epee::net_utils::invoke_http_json("/json_rpc", request, response, m_http_client, timeout_time_ms);
+    if (!result)
+        cerr << "Error connecting to Fury daemon at " << daemon_url << endl;
+
+    res = response.result;
+    return result;
+}
+
+bool
+rpccalls::get_quorum_state_batched(COMMAND_RPC_GET_QUORUM_STATE_BATCHED::response &res, uint64_t height_begin, uint64_t height_end)
+{
+    std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
+    bool result = false;
+    if (!connect_to_fury_daemon())
+    {
+        cerr << "rpccalls::get_quorum_state_batched: not connected to daemon" << endl;
+        return result;
+    }
+
+    epee::json_rpc::request<COMMAND_RPC_GET_QUORUM_STATE_BATCHED::request> request;
+    epee::json_rpc::response<COMMAND_RPC_GET_QUORUM_STATE_BATCHED::response, std::string> response;
+    request.params.height_begin = height_begin;
+    request.params.height_end = height_end;
+    request.jsonrpc = "2.0";
+    request.id      = epee::serialization::storage_entry(0);
+    request.method  = "get_quorum_state_batched";
+
+    result = epee::net_utils::invoke_http_json("/json_rpc", request, response, m_http_client, timeout_time_ms);
+    if (!result)
+        cerr << "Error connecting to Fury daemon at " << daemon_url << endl;
+
+    res = response.result;
+    return result;
+}
 
 }

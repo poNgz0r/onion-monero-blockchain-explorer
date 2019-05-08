@@ -2,12 +2,12 @@
 // Created by mwo on 5/11/15.
 //
 
-#ifndef XMREG01_TOOLS_H
-#define XMREG01_TOOLS_H
+#ifndef FURYEG01_TOOLS_H
+#define FURYEG01_TOOLS_H
 
 #define PATH_SEPARARTOR '/'
-
-#define XMR_AMOUNT(value) \
+    
+#define FURY_AMOUNT(value) \
     static_cast<double>(value) / 1e8
 
 #define REMOVE_HASH_BRAKETS(a_hash) \
@@ -15,7 +15,7 @@
 
 
 
-#include "monero_headers.h"
+#include "fury_headers.h"
 
 #include "../ext/fmt/ostream.h"
 #include "../ext/fmt/format.h"
@@ -38,7 +38,7 @@
  * Names are rather self-explanatory, so I think
  * there is no reason for any detailed explanations here
  */
-namespace xmreg
+namespace furyeg
 {
 
 using namespace cryptonote;
@@ -222,9 +222,9 @@ get_payment_id(const transaction& tx,
 
 
 inline double
-get_xmr(uint64_t core_amount)
+get_fury(uint64_t core_amount)
 {
-    return  static_cast<double>(core_amount) / 1e12;
+    return FURY_AMOUNT(core_amount);
 }
 
 array<size_t, 5>
@@ -272,8 +272,8 @@ public_key
 get_tx_pub_key_from_received_outs(const transaction &tx);
 
 static
-string
-xmr_amount_to_str(const uint64_t& xmr_amount,
+string                  
+fury_amount_to_str(const uint64_t& fury_amount,
                   string _format="{:0.12f}",
                   bool zero_to_question_mark=true)
 {
@@ -281,13 +281,13 @@ xmr_amount_to_str(const uint64_t& xmr_amount,
 
     if (!zero_to_question_mark)
     {
-        amount_str = fmt::format(_format, XMR_AMOUNT(xmr_amount));
+        amount_str = fmt::format(_format, FURY_AMOUNT(fury_amount));
     }
     else
     {
-        if (xmr_amount > 0 && zero_to_question_mark == true)
+        if (fury_amount > 0 && zero_to_question_mark == true)
         {
-            amount_str = fmt::format(_format, XMR_AMOUNT(xmr_amount));
+            amount_str = fmt::format(_format, FURY_AMOUNT(fury_amount));
         }
     }
 
@@ -370,6 +370,21 @@ calc_median(It it_begin, It it_end)
 void
 pause_execution(uint64_t no_seconds, const string& text = "now");
 
+string
+make_comma_sep_number(uint64_t value);
+
+std::string
+bytes_to_hex(char const *bytes, int len);
+
+void
+get_human_readable_timestamp(uint64_t ts, std::string *result);
+
+char const *
+get_human_time_ago(time_t t, time_t now);
+
+std::string
+tx_to_hex(transaction const& tx);
+
 }
 
-#endif //XMREG01_TOOLS_H
+#endif //FURYEG01_TOOLS_H

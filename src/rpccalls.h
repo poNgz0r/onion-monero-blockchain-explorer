@@ -3,10 +3,10 @@
 //
 
 
-#ifndef CROWXMR_RPCCALLS_H
-#define CROWXMR_RPCCALLS_H
+#ifndef CROWFURY_RPCCALLS_H
+#define CROWFURY_RPCCALLS_H
 
-#include "monero_headers.h"
+#include "fury_headers.h"
 
 #include <mutex>
 #include <utility>
@@ -47,8 +47,8 @@ struct has_destructor
 
 namespace cryptonote
 {
-// declare struct in monero's cryptonote namespace.
-// monero should provide definition for this,
+// declare struct in fury's cryptonote namespace.
+// fury should provide definition for this,
 // but we need to have it declared as we are going to
 // check if its definition exist or not. depending on this
 // we decide what gets to be defined as
@@ -56,7 +56,7 @@ namespace cryptonote
 struct COMMAND_RPC_GET_ALT_BLOCKS_HASHES;
 }
 
-namespace xmreg
+namespace furyeg
 {
 
 using namespace cryptonote;
@@ -67,7 +67,7 @@ using namespace std;
 
 class rpccalls
 {
-    string deamon_url ;
+    string daemon_url ;
     uint64_t timeout_time;
 
     std::chrono::milliseconds timeout_time_ms;
@@ -81,11 +81,11 @@ class rpccalls
 
 public:
 
-    rpccalls(string _deamon_url = "http:://127.0.0.1:18081",
+    rpccalls(string _daemon_url = "http:://127.0.0.1:22023",
              uint64_t _timeout = 200000);
 
     bool
-    connect_to_monero_deamon();
+    connect_to_fury_daemon();
 
     uint64_t
     get_current_height();
@@ -98,6 +98,9 @@ public:
 
     bool
     get_network_info(COMMAND_RPC_GET_INFO::response& info);
+
+    bool
+    get_staking_requirement(uint64_t height, COMMAND_RPC_GET_STAKING_REQUIREMENT::response& response);
 
     bool
     get_hardfork_info( COMMAND_RPC_HARD_FORK_INFO::response& res);
@@ -130,9 +133,9 @@ public:
         {
             std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-            if (!connect_to_monero_deamon())
+            if (!connect_to_fury_daemon())
             {
-                cerr << "get_alt_blocks: not connected to deamon" << endl;
+                cerr << "get_alt_blocks: not connected to daemon" << endl;
                 return false;
             }
 
@@ -156,15 +159,15 @@ public:
 
             if (!err.empty())
             {
-                cerr << "Error connecting to FURY deamon due to "
+                cerr << "Error connecting to Fury daemon due to "
                      << err << endl;
                 return false;
             }
         }
         else
         {
-            cerr << "Error connecting to FURY deamon at "
-                 << deamon_url << endl;
+            cerr << "Error connecting to Fury daemon at "
+                 << daemon_url << endl;
             return false;
         }
 
@@ -186,6 +189,15 @@ public:
     bool
     get_block(string const& blk_hash, block& blk, string& error_msg);
 
+    /// When `all` is set, ignore `pubkeys` and get info for all nodes
+    bool
+    get_service_node(COMMAND_RPC_GET_SERVICE_NODES::response &res, const std::vector<std::string> &pubkeys);
+
+    bool
+    get_quorum_state(COMMAND_RPC_GET_QUORUM_STATE::response &res, uint64_t height);
+
+    bool
+    get_quorum_state_batched(COMMAND_RPC_GET_QUORUM_STATE_BATCHED::response &res, uint64_t height_begin, uint64_t height_end);
 };
 
 
@@ -193,4 +205,4 @@ public:
 
 
 
-#endif //CROWXMR_RPCCALLS_H
+#endif //CROWFURY_RPCCALLS_H

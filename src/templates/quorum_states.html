@@ -1,0 +1,68 @@
+{{#quorum_array}}
+<div class="card">
+	<div class="col-sm-12">	
+	  <h2>Quorum State (Height: {{quorum_height}})</h2>
+		<h4>(No. of Service Nodes In Quorum: {{quorum_nodes_array_size}})</h4>
+		<div class="table-responsive">
+			<table class="table table-hover table-striped">
+				<thead>
+				  <tr>
+					  <th>Public Key</th>
+					  <th style="text-align: center;">Last Uptime Proof</th>
+					  <th style="text-align: right;">Expiry Date UTC</th>
+				  </tr>
+				</thead>
+				  {{#quorum_nodes_array}}
+				  <tr>
+					  <td><a href="/service_node/{{public_key}}">{{public_key}}</a></td>
+					  <td style="text-align: center;">{{last_uptime_proof}}</td>
+					  <td style="text-align: right;">{{expiration_date}}</td>
+				  </tr>
+				  {{/quorum_nodes_array}}
+			</table>
+		</div>
+		
+		  <p>
+			  Note: The quorum shown here is the currently active voting height
+			  which is not necessarily the latest quorum. Quorums can only be voted on
+			  after a number of blocks have transpired.
+		  </p>
+		  <p class="show-list" style="text-align: center;"><a href="/quorums">Show last 1hrs worth of the stored quorum states</a></p>		
+	</div>
+</div>
+		
+<div class="card">
+	<div class="col-sm-12">	
+      <h2>Nodes To Test</h2>
+      <h4>(No. of Service Nodes To Test: {{nodes_to_test_array_size}})</h4>
+
+		<div class="table-responsive">
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+					  <th>Public Key</th>
+					  <th style="text-align: center;">Last Uptime Proof</th>
+					  <th style="text-align: right;">Expiry Date UTC</th>
+				  </tr>
+				 </thead>
+				  {{#nodes_to_test_array}}
+				  <tr>
+					  <td><a href="/service_node/{{public_key}}">{{public_key}}</a></td>
+					  <td style="text-align: center;">{{last_uptime_proof}}</td>
+					  <td style="text-align: right;">{{expiration_date}}</td>
+				  </tr>
+				  {{/nodes_to_test_array}}
+			</table>
+		</div>
+	</div>
+</div>
+{{/quorum_array}}
+
+<script>
+$(function(){
+	var value = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+	if(value == 'quorums'){
+		$('.show-list').remove();
+	}
+});
+</script>

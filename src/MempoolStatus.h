@@ -2,8 +2,8 @@
 // Created by mwo on 28/05/17.
 //
 
-#ifndef XMRBLOCKS_MEMPOOLSTATUS_H
-#define XMRBLOCKS_MEMPOOLSTATUS_H
+#ifndef FURYBLOCKS_MEMPOOLSTATUS_H
+#define FURYBLOCKS_MEMPOOLSTATUS_H
 
 
 #include "MicroCore.h"
@@ -16,7 +16,7 @@
 #include <mutex>
 #include <atomic>
 
-namespace xmreg
+namespace furyeg
 {
 
 struct MempoolStatus
@@ -38,9 +38,11 @@ struct MempoolStatus
         uint64_t mixin_no {0};
 
         string fee_str;
+        string fee_micro_str;
         string payed_for_kB_str;
-        string xmr_inputs_str;
-        string xmr_outputs_str;
+        string payed_for_kB_micro_str;
+        string fury_inputs_str;
+        string fury_outputs_str;
         string timestamp_str;
         string txsize;
 
@@ -49,6 +51,12 @@ struct MempoolStatus
                       // 'e' - encrypted, short, from integrated addresses
     };
 
+    struct service_node_state
+    {
+      int num_registered;
+    };
+
+    static service_node_state node_state;
 
     // to keep network_info in cache
     // and to show previous info in case current querry for
@@ -72,14 +80,18 @@ struct MempoolStatus
         uint64_t cumulative_difficulty  {0};
         uint64_t block_size_limit  {0};
         uint64_t block_size_median  {0};
+        uint64_t block_weight_limit {0};
         char block_size_limit_str[10];   // needs to be trivially copyable
         char block_size_median_str[10];  // std::string is not trivially copyable
+        char total_blockchain_size_str[10];
         uint64_t start_time  {0};
         uint64_t current_hf_version {0};
 
         uint64_t hash_rate  {0};
         uint64_t fee_per_kb  {0};
         uint64_t info_timestamp  {0};
+        uint64_t staking_requirement {0};
+        uint64_t total_blockchain_size {0};
 
         bool current {false};
 
@@ -122,7 +134,7 @@ struct MempoolStatus
     static atomic<uint64_t> mempool_size; // size in bytes.
 
     static bf::path blockchain_path;
-    static string deamon_url;
+    static string daemon_url;
     static cryptonote::network_type nettype;
 
     // make object for accessing the blockchain here
@@ -161,4 +173,4 @@ struct MempoolStatus
 };
 
 }
-#endif //XMRBLOCKS_MEMPOOLSTATUS_H
+#endif //FURYBLOCKS_MEMPOOLSTATUS_H

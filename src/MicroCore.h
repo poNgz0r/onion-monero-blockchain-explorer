@@ -2,15 +2,15 @@
 // Created by mwo on 5/11/15.
 //
 
-#ifndef XMREG01_MICROCORE_H
-#define XMREG01_MICROCORE_H
+#ifndef FURYEG01_MICROCORE_H
+#define FURYEG01_MICROCORE_H
 
 #include <iostream>
 
-#include "monero_headers.h"
+#include "fury_headers.h"
 #include "tools.h"
 
-namespace xmreg
+namespace furyeg
 {
     using namespace cryptonote;
     using namespace crypto;
@@ -28,14 +28,17 @@ namespace xmreg
 
         string blockchain_path;
 
-        tx_memory_pool m_mempool;
         Blockchain m_blockchain_storage;
+        tx_memory_pool m_mempool;
+        service_nodes::deregister_vote_pool m_deregister_vote_pool;
 
         hw::device* m_device;
 
         network_type nettype;
 
     public:
+        service_nodes::service_node_list m_service_node_list;
+
         MicroCore();
 
         bool
@@ -43,6 +46,9 @@ namespace xmreg
 
         Blockchain&
         get_core();
+
+        tx_memory_pool&
+        get_mempool();
 
         bool
         get_block_by_height(const uint64_t& height, block& blk);
@@ -59,14 +65,11 @@ namespace xmreg
                           tx_out& out,
                           size_t& output_index);
 
-        bool
-        get_tx_hash_from_output_pubkey(const public_key& output_pubkey,
-                                       const uint64_t& block_height,
-                                       crypto::hash& tx_hash,
-                                       transaction& tx_found);
-
         uint64_t
         get_blk_timestamp(uint64_t blk_height);
+
+        bool
+        get_block_complete_entry(block const& b, block_complete_entry& bce);
 
         string
         get_blkchain_path();
@@ -76,7 +79,6 @@ namespace xmreg
 
         virtual ~MicroCore();
     };
-
 
 
 
@@ -91,4 +93,4 @@ namespace xmreg
 
 
 
-#endif //XMREG01_MICROCORE_H
+#endif //FURYEG01_MICROCORE_H

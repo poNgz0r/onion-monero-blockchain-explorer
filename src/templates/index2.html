@@ -75,11 +75,15 @@
 		</div>
 	</div>    
     {{/network_info}}
-
-    {{#emission}}
-        <h3>
-            FURY current supply is {{amount}} and block height is {{blk_no}}
-        </h3>
+	
+	{{#emission}}
+        <p style="margin-top: 2px">
+            Circulating Supply: {{circulating_supply}}
+            {{^circulating_supply_is_up_to_date}}
+            <span style="color:#ff6b62">(calculating)</span>
+            {{/circulating_supply_is_up_to_date}}
+            | Fury emission (fees) is {{amount}} ({{fee_amount}}) as of {{blk_no}} block
+        </p>
     {{/emission}}
 
     {{{mempool_info}}}
@@ -128,23 +132,34 @@
 					</tr>
 				</tfoot>
 			</table>
-			<div id="pages" style="text-align: center;">
-			 {{^is_page_zero}}
-			   <a href="/page/{{prev_page}}">previous page</a> |
-			   <a href="/">first page</a> |
-			 {{/is_page_zero}}
-				current page: {{page_no}}/<a href="/page/{{total_page_no}}">{{total_page_no}}</a>
-				| <a href="/page/{{next_page}}">next page</a>
-			</div>
 		</div>
+		<div id="pages" style="text-align: center;">
+		 {{^is_page_zero}}
+		   <a href="/page/{{prev_page}}">previous page</a> |
+		   <a href="/">first page</a> |
+		 {{/is_page_zero}}
+			current page: {{page_no}}/<a href="/page/{{total_page_no}}">{{total_page_no}}</a>
+			| <a href="/page/{{next_page}}">next page</a>
+		</div>		
+		<br>
     </div>
 </div>
 
+	{{{service_node_summary}}}
+
+
+	{{{quorum_state_summary}}}
+
+
 {{#show_cache_times}}
-	<h6 style="margin-top: 1px;color:#949490">
-		Tx details construction time: {{construction_time_total}} s
-		
-		includes {{construction_time_cached}} s from block cache ({{cache_hits}} hits)
-		and {{construction_time_non_cached}} s from non cache ({{cache_misses}} misses)
-	</h6>
+	<div class="card">
+			<div class="col-sm-12">	
+			<h6>
+				Tx details construction time: {{construction_time_total}} s
+				<br/>
+				includes {{construction_time_cached}} s from block cache ({{cache_hits}} hits)
+				and {{construction_time_non_cached}} s from non cache ({{cache_misses}} misses)
+			</h6>
+		</div>
+    </div>
 {{/show_cache_times}}

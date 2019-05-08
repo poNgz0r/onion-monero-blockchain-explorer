@@ -1,44 +1,42 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME
-        xmrblocks)
+        furyblocks)
 
 
 project(${PROJECT_NAME})
 
-set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS} -std=c++14")
-
+set(CMAKE_CXX_STANDARD 11)
 
 if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj -O3")
 endif()
 
 
-if (NOT MONERO_DIR)
-    set(MONERO_DIR ~/monero)
+if (NOT FURY_DIR)
+    set(FURY_DIR ~/fury)
 endif()
 
-message(STATUS MONERO_DIR ": ${MONERO_DIR}")
+message(STATUS FURY_DIR ": ${FURY_DIR}")
 
-set(MONERO_SOURCE_DIR ${MONERO_DIR}
-        CACHE PATH "Path to the root directory for Monero")
+set(FURY_SOURCE_DIR ${FURY_DIR}
+        CACHE PATH "Path to the root directory for Fury")
 
-# set location of monero build tree
-set(MONERO_BUILD_DIR ${MONERO_SOURCE_DIR}/build/release/
-        CACHE PATH "Path to the build directory for Monero")
+# set location of fury build tree
+set(FURY_BUILD_DIR ${FURY_SOURCE_DIR}/build/release/
+        CACHE PATH "Path to the build directory for Fury")
 
 set(MY_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake"
         CACHE PATH "The path to the cmake directory of the current project")
 
 list(APPEND CMAKE_MODULE_PATH "${MY_CMAKE_DIR}")
 
-set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${MONERO_BUILD_DIR}"
-        CACHE PATH "Add Monero directory for library searching")
+set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${FURY_BUILD_DIR}"
+        CACHE PATH "Add Fury directory for library searching")
 
 include(MyUtils)
 
-find_package(Monero)
+find_package(Fury)
 
 # find boost
 find_package(Boost COMPONENTS
@@ -64,12 +62,19 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR WIN32)
     add_library(unbound STATIC IMPORTED)
-    set_property(TARGET unbound PROPERTY IMPORTED_LOCATION ${MONERO_BUILD_DIR}/external/unbound/libunbound.a)
+    set_property(TARGET unbound PROPERTY IMPORTED_LOCATION ${FURY_BUILD_DIR}/external/unbound/libunbound.a)
 endif()
+
+
 
 # include boost headers
 include_directories(${Boost_INCLUDE_DIRS})
+
+# include monero
+include_directories(${FURY_SOURCE_DIR}/build)
+
 include_directories("ext/mstch/include")
+include_directories("ext/mstch/include/src")
 include_directories("ext/crow")
 
 # add ext/ subfolder
@@ -119,7 +124,7 @@ set(LIBRARIES
         checkpoints
         version
         epee
-        pcsclite
+        sodium
         ${Boost_LIBRARIES}
         pthread
         unbound
@@ -128,7 +133,7 @@ set(LIBRARIES
         ssl)
 
 if(APPLE)
-    set(LIBRARIES ${LIBRARIES} "-framework IOKit -framework PCSC")
+    set(LIBRARIES ${LIBRARIES} "-framework IOKit -framework Foundation")
 else()
     set(LIBRARIES ${LIBRARIES} atomic)
 endif()
@@ -147,5 +152,8 @@ if (WIN32)
 else()
     set(LIBRARIES ${LIBRARIES} dl)
 endif()
+
+find_package(HIDAPI)
+set(LIBRARIES ${LIBRARIES} ${HIDAPI_LIBRARIES})
 
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
